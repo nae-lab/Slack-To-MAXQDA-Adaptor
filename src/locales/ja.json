@@ -41,6 +41,23 @@
     "exported": "{{count}}件のメッセージを{{path}}にエクスポートしました",
     "channel": "チャンネル: {{name}}"
   },
+  "channels": {
+    "searchPlaceholder": "チャンネルを検索...",
+    "selectPlaceholder": "チャンネルを選択...",
+    "loading": "チャンネル読み込み中...",
+    "noChannels": "チャンネルが見つかりません。",
+    "retry": "再試行",
+    "fetchError": "チャンネルの取得に失敗しました",
+    "members": "{{count}}人のメンバー"
+  },
+  "validation": {
+    "validating": "検証中...",
+    "valid": "有効",
+    "invalid": "無効",
+    "storedSecurely": "安全に保存済み",
+    "connectedAs": "{{user}} @ {{team}} として接続中",
+    "tokenStoredInfo": "トークンはこのデバイスに安全に保存されています"
+  },
   "errors": {
     "tokenRequired": "Slack APIトークンが必要です",
     "channelRequired": "チャンネルIDが必要です",

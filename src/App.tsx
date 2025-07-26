@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
 import { Languages } from 'lucide-react'
 import {
   Select,
@@ -11,9 +12,40 @@ import { ExportForm } from '@/components/ExportForm'
 
 function App() {
   const { t, i18n } = useTranslation()
+  const [currentLanguage, setCurrentLanguage] = useState(() => {
+    return localStorage.getItem('i18nextLng') || 'en'
+  })
+
+  // Ensure language is properly loaded on startup
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('i18nextLng')
+    if (savedLanguage && savedLanguage !== i18n.language) {
+      console.log('Loading saved language:', savedLanguage)
+      i18n.changeLanguage(savedLanguage)
+      setCurrentLanguage(savedLanguage)
+    } else if (savedLanguage) {
+      console.log('Language already set to:', savedLanguage)
+      setCurrentLanguage(savedLanguage)
+    }
+  }, [i18n])
+
+  // Listen to language changes from i18n
+  useEffect(() => {
+    const handleLanguageChanged = (lng: string) => {
+      setCurrentLanguage(lng)
+    }
+    
+    i18n.on('languageChanged', handleLanguageChanged)
+    return () => i18n.off('languageChanged', handleLanguageChanged)
+  }, [i18n])
 
   const handleLanguageChange = (lang: string) => {
-    i18n.changeLanguage(lang)
+    console.log('Changing language to:', lang)
+    localStorage.setItem('i18nextLng', lang)
+    setCurrentLanguage(lang)
+    i18n.changeLanguage(lang).then(() => {
+      console.log('Language changed successfully to:', lang)
+    })
   }
 
   return (
@@ -25,7 +57,7 @@ function App() {
             <p className="text-muted-foreground mt-2">{t("app.description")}</p>
           </div>
 
-          <Select value={i18n.language} onValueChange={handleLanguageChange}>
+          <Select value={currentLanguage} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-[140px]">
               <Languages className="w-4 h-4 mr-2" />
               <SelectValue />
@@ -33,6 +65,14 @@ function App() {
             <SelectContent>
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="ja">日本語</SelectItem>
+              <SelectItem value="ko">한국어</SelectItem>
+              <SelectItem value="zh">中文</SelectItem>
+              <SelectItem value="zh-TW">繁體中文</SelectItem>
+              <SelectItem value="es">Español</SelectItem>
+              <SelectItem value="pt">Português</SelectItem>
+              <SelectItem value="nl">Nederlands</SelectItem>
+              <SelectItem value="uk">Українська</SelectItem>
+              <SelectItem value="fi">Suomi</SelectItem>
             </SelectContent>
           </Select>
         </div>

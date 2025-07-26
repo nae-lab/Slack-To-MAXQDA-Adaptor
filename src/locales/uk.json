@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Експортер Slack",
+    "description": "Експорт повідомлень Slack у формати DOCX та Markdown"
+  },
+  "export": {
+    "title": "Налаштування Експорту",
+    "single": "Один Канал",
+    "multiple": "Кілька Каналів",
+    "token": "Токен API Slack",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Клацніть тут, щоб побачити, як створити додаток Slack",
+    "channelId": "ID Каналу",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "Ви можете знайти це в URL Slack або деталях каналу",
+    "startDate": "Дата Початку",
+    "endDate": "Дата Закінчення (Необов'язково)",
+    "format": "Формат Експорту",
+    "formatDocx": "Документ Word (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "Шлях Виводу",
+    "chooseFile": "Вибрати Файл",
+    "chooseDirectory": "Вибрати Директорію",
+    "concurrency": "Паралельні Процеси",
+    "concurrencyHelp": "Кількість паралельних експортів (1-10)",
+    "exportButton": "Експортувати",
+    "exporting": "Експортування...",
+    "addChannel": "Додати Канал",
+    "removeChannel": "Видалити"
+  },
+  "manifest": {
+    "title": "Конфігурація Додатку Slack",
+    "description": "Створіть додаток Slack з наступним маніфестом, щоб почати",
+    "copyButton": "Копіювати Маніфест",
+    "copied": "Скопійовано!",
+    "instructions": "1. Перейдіть на api.slack.com/apps\n2. Клацніть 'Створити Новий Додаток'\n3. Оберіть 'З маніфесту додатку'\n4. Вставте цей маніфест\n5. Встановіть додаток у свій робочий простір\n6. Скопіюйте Bot User OAuth Token"
+  },
+  "results": {
+    "success": "Експорт успішно завершено!",
+    "error": "Експорт не вдався",
+    "exported": "Експортовано {{count}} повідомлень до {{path}}",
+    "channel": "Канал: {{name}}"
+  },
+  "channels": {
+    "searchPlaceholder": "Пошук каналів...",
+    "selectPlaceholder": "Вибрати канал...",
+    "loading": "Завантаження каналів...",
+    "noChannels": "Канали не знайдено.",
+    "retry": "Повторити",
+    "fetchError": "Помилка отримання каналів",
+    "members": "{{count}} учасників"
+  },
+  "validation": {
+    "validating": "Перевірка...",
+    "valid": "Дійсний",
+    "invalid": "Недійсний",
+    "storedSecurely": "Безпечно збережено",
+    "connectedAs": "Підключено як {{user}} @ {{team}}",
+    "tokenStoredInfo": "Токен безпечно збережено на цьому пристрої"
+  },
+  "errors": {
+    "tokenRequired": "Токен API Slack обов'язковий",
+    "channelRequired": "ID каналу обов'язковий",
+    "dateRequired": "Дата початку обов'язкова",
+    "pathRequired": "Шлях виводу обов'язковий",
+    "invalidDate": "Неправильний формат дати",
+    "exportFailed": "Експорт не вдався: {{error}}"
+  }
+}

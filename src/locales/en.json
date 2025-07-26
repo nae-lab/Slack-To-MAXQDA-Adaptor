@@ -41,6 +41,23 @@
     "exported": "Exported {{count}} messages to {{path}}",
     "channel": "Channel: {{name}}"
   },
+  "channels": {
+    "searchPlaceholder": "Search channels...",
+    "selectPlaceholder": "Select a channel...",
+    "loading": "Loading channels...",
+    "noChannels": "No channels found.",
+    "retry": "Retry",
+    "fetchError": "Failed to fetch channels",
+    "members": "{{count}} members"
+  },
+  "validation": {
+    "validating": "Validating...",
+    "valid": "Valid",
+    "invalid": "Invalid",
+    "storedSecurely": "Stored securely",
+    "connectedAs": "Connected as {{user}} @ {{team}}",
+    "tokenStoredInfo": "Token stored securely on this device"
+  },
   "errors": {
     "tokenRequired": "Slack API token is required",
     "channelRequired": "Channel ID is required",

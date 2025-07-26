@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Slack Viejä",
+    "description": "Vie Slack-viestit DOCX ja Markdown muotoihin"
+  },
+  "export": {
+    "title": "Vienti Asetukset",
+    "single": "Yksittäinen Kanava",
+    "multiple": "Useita Kanavia",
+    "token": "Slack API Token",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Klikkaa tätä nähdäksesi kuinka luoda Slack sovellus",
+    "channelId": "Kanavan ID",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "Löydät tämän Slack URL:stä tai kanavan tiedoista",
+    "startDate": "Aloituspäivä",
+    "endDate": "Lopetuspäivä (Valinnainen)",
+    "format": "Vienti Muoto",
+    "formatDocx": "Word Dokumentti (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "Tulostuspolku",
+    "chooseFile": "Valitse Tiedosto",
+    "chooseDirectory": "Valitse Hakemisto",
+    "concurrency": "Samanaikaiset Prosessit",
+    "concurrencyHelp": "Rinnakkaisten vientien määrä (1-10)",
+    "exportButton": "Vie",
+    "exporting": "Viedään...",
+    "addChannel": "Lisää Kanava",
+    "removeChannel": "Poista"
+  },
+  "manifest": {
+    "title": "Slack Sovelluksen Konfiguraatio",
+    "description": "Luo Slack sovellus seuraavalla manifestilla aloittaaksesi",
+    "copyButton": "Kopioi Manifesti",
+    "copied": "Kopioitu!",
+    "instructions": "1. Mene osoitteeseen api.slack.com/apps\n2. Klikkaa 'Luo Uusi Sovellus'\n3. Valitse 'Sovellus manifestista'\n4. Liitä tämä manifesti\n5. Asenna sovellus työtilaasi\n6. Kopioi Bot User OAuth Token"
+  },
+  "results": {
+    "success": "Vienti onnistui!",
+    "error": "Vienti epäonnistui",
+    "exported": "Vietiin {{count}} viestiä kohteeseen {{path}}",
+    "channel": "Kanava: {{name}}"
+  },
+  "channels": {
+    "searchPlaceholder": "Etsi kanavia...",
+    "selectPlaceholder": "Valitse kanava...",
+    "loading": "Ladataan kanavia...",
+    "noChannels": "Kanavia ei löytynyt.",
+    "retry": "Yritä Uudelleen",
+    "fetchError": "Kanavien haku epäonnistui",
+    "members": "{{count}} jäsentä"
+  },
+  "validation": {
+    "validating": "Vahvistetaan...",
+    "valid": "Kelvollinen",
+    "invalid": "Virheellinen",
+    "storedSecurely": "Tallennettu turvallisesti",
+    "connectedAs": "Yhdistetty käyttäjänä {{user}} @ {{team}}",
+    "tokenStoredInfo": "Token tallennettu turvallisesti tähän laitteeseen"
+  },
+  "errors": {
+    "tokenRequired": "Slack API token vaaditaan",
+    "channelRequired": "Kanavan ID vaaditaan",
+    "dateRequired": "Aloituspäivä vaaditaan",
+    "pathRequired": "Tulostuspolku vaaditaan",
+    "invalidDate": "Virheellinen päivämäärän muoto",
+    "exportFailed": "Vienti epäonnistui: {{error}}"
+  }
+}

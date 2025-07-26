@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Slack 匯出器",
+    "description": "將 Slack 訊息匯出為 DOCX 和 Markdown 格式"
+  },
+  "export": {
+    "title": "匯出設定",
+    "single": "單一頻道",
+    "multiple": "多個頻道",
+    "token": "Slack API 權杖",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "點擊此處了解如何建立 Slack 應用程式",
+    "channelId": "頻道 ID",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "您可以在 Slack URL 或頻道詳情中找到",
+    "startDate": "開始日期",
+    "endDate": "結束日期（選填）",
+    "format": "匯出格式",
+    "formatDocx": "Word 文件 (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "輸出路徑",
+    "chooseFile": "選擇檔案",
+    "chooseDirectory": "選擇目錄",
+    "concurrency": "並行處理程序",
+    "concurrencyHelp": "並行匯出數量 (1-10)",
+    "exportButton": "匯出",
+    "exporting": "正在匯出...",
+    "addChannel": "新增頻道",
+    "removeChannel": "移除"
+  },
+  "manifest": {
+    "title": "Slack 應用程式設定",
+    "description": "使用以下清單建立 Slack 應用程式以開始使用",
+    "copyButton": "複製清單",
+    "copied": "已複製！",
+    "instructions": "1. 前往 api.slack.com/apps\n2. 點擊「建立新應用程式」\n3. 選擇「從應用程式清單」\n4. 貼上此清單\n5. 將應用程式安裝到您的工作區\n6. 複製機器人使用者 OAuth 權杖"
+  },
+  "results": {
+    "success": "匯出成功完成！",
+    "error": "匯出失敗",
+    "exported": "已將 {{count}} 則訊息匯出到 {{path}}",
+    "channel": "頻道：{{name}}"
+  },
+  "channels": {
+    "searchPlaceholder": "搜尋頻道...",
+    "selectPlaceholder": "選擇頻道...",
+    "loading": "載入頻道中...",
+    "noChannels": "未找到頻道。",
+    "retry": "重試",
+    "fetchError": "取得頻道失敗",
+    "members": "{{count}} 位成員"
+  },
+  "validation": {
+    "validating": "驗證中...",
+    "valid": "有效",
+    "invalid": "無效",
+    "storedSecurely": "安全儲存",
+    "connectedAs": "以 {{user}} @ {{team}} 身分連線",
+    "tokenStoredInfo": "權杖已安全儲存在此裝置上"
+  },
+  "errors": {
+    "tokenRequired": "需要 Slack API 權杖",
+    "channelRequired": "需要頻道 ID",
+    "dateRequired": "需要開始日期",
+    "pathRequired": "需要輸出路徑",
+    "invalidDate": "無效的日期格式",
+    "exportFailed": "匯出失敗：{{error}}"
+  }
+}

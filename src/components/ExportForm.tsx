@@ -206,24 +206,24 @@ export function ExportForm() {
             {tokenValidation.status === 'validating' && (
               <div className="flex items-center gap-1">
                 <Loader2 className="h-3 w-3 animate-spin" />
-                <span className="text-xs text-muted-foreground">Validating...</span>
+                <span className="text-xs text-muted-foreground">{t('validation.validating')}</span>
               </div>
             )}
             {tokenValidation.status === 'valid' && (
               <div className="flex items-center gap-1">
                 <CheckCircle className="h-3 w-3 text-green-600" />
-                <span className="text-xs text-green-600">Valid</span>
+                <span className="text-xs text-green-600">{t('validation.valid')}</span>
               </div>
             )}
             {tokenValidation.status === 'invalid' && (
               <div className="flex items-center gap-1">
                 <XCircle className="h-3 w-3 text-red-600" />
-                <span className="text-xs text-red-600">Invalid</span>
+                <span className="text-xs text-red-600">{t('validation.invalid')}</span>
               </div>
             )}
             {hasStoredToken && (
               <div className="flex items-center gap-2">
-                <span className="text-xs text-green-600">Stored securely</span>
+                <span className="text-xs text-green-600">{t('validation.storedSecurely')}</span>
                 <Button
                   onClick={handleClearToken}
                   variant="ghost"
@@ -259,7 +259,7 @@ export function ExportForm() {
           <div className="flex flex-col items-end gap-1">
             {tokenValidation.status === 'valid' && tokenValidation.user && tokenValidation.team && (
               <div className="text-xs text-green-600">
-                Connected as {tokenValidation.user} @ {tokenValidation.team}
+                {t('validation.connectedAs', { user: tokenValidation.user, team: tokenValidation.team })}
               </div>
             )}
             {tokenValidation.status === 'invalid' && tokenValidation.error && (
@@ -269,7 +269,7 @@ export function ExportForm() {
             )}
             {token && (
               <span className="text-xs text-muted-foreground">
-                Token stored securely on this device
+                {t('validation.tokenStoredInfo')}
               </span>
             )}
           </div>

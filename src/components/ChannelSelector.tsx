@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ChevronDown, Hash, Lock, Search, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -21,9 +22,10 @@ export function ChannelSelector({
   token, 
   value, 
   onValueChange, 
-  placeholder = "Select a channel...",
+  placeholder,
   disabled = false 
 }: ChannelSelectorProps) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
   const [channels, setChannels] = useState<SlackChannel[]>([])
   const [loading, setLoading] = useState(false)
@@ -56,10 +58,10 @@ export function ChannelSelector({
       if (result.success && result.channels) {
         setChannels(result.channels.sort((a, b) => a.name.localeCompare(b.name)))
       } else {
-        setError(result.error || 'Failed to fetch channels')
+        setError(result.error || t('channels.fetchError'))
       }
     } catch (err) {
-      setError('Failed to fetch channels')
+      setError(t('channels.fetchError'))
     } finally {
       setLoading(false)
     }
@@ -93,7 +95,7 @@ export function ChannelSelector({
               {selectedChannel.name}
             </span>
           ) : (
-            <span className="text-muted-foreground">{placeholder}</span>
+            <span className="text-muted-foreground">{placeholder || t('channels.selectPlaceholder')}</span>
           )}
           <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -103,7 +105,7 @@ export function ChannelSelector({
           <div className="flex items-center border-b px-3 py-2">
             <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
             <Input
-              placeholder="Search channels..."
+              placeholder={t('channels.searchPlaceholder')}
               className="border-0 p-0 focus-visible:ring-0 focus-visible:ring-offset-0"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -113,7 +115,7 @@ export function ChannelSelector({
             {loading ? (
               <div className="flex items-center justify-center p-6">
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                <span className="text-sm text-muted-foreground">Loading channels...</span>
+                <span className="text-sm text-muted-foreground">{t('channels.loading')}</span>
               </div>
             ) : error ? (
               <div className="p-6 text-center">
@@ -124,12 +126,12 @@ export function ChannelSelector({
                   onClick={fetchChannels}
                   className="mt-2"
                 >
-                  Retry
+                  {t('channels.retry')}
                 </Button>
               </div>
             ) : filteredChannels.length === 0 ? (
               <div className="p-6 text-center text-sm text-muted-foreground">
-                No channels found.
+                {t('channels.noChannels')}
               </div>
             ) : (
               <div className="p-1">
@@ -154,7 +156,7 @@ export function ChannelSelector({
                     </div>
                     {channel.memberCount > 0 && (
                       <div className="text-xs text-muted-foreground">
-                        {channel.memberCount} members
+                        {t('channels.members', { count: channel.memberCount })}
                       </div>
                     )}
                   </div>

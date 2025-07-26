@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Slack Exporteerder",
+    "description": "Exporteer Slack-berichten naar DOCX en Markdown formaten"
+  },
+  "export": {
+    "title": "Export Instellingen",
+    "single": "Enkel Kanaal",
+    "multiple": "Meerdere Kanalen",
+    "token": "Slack API Token",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Klik hier om te zien hoe je een Slack app maakt",
+    "channelId": "Kanaal ID",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "Je kunt dit vinden in de Slack URL of kanaal details",
+    "startDate": "Startdatum",
+    "endDate": "Einddatum (Optioneel)",
+    "format": "Export Formaat",
+    "formatDocx": "Word Document (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "Uitvoerpad",
+    "chooseFile": "Kies Bestand",
+    "chooseDirectory": "Kies Directory",
+    "concurrency": "Gelijktijdige Processen",
+    "concurrencyHelp": "Aantal parallelle exports (1-10)",
+    "exportButton": "Exporteren",
+    "exporting": "Aan het exporteren...",
+    "addChannel": "Kanaal Toevoegen",
+    "removeChannel": "Verwijderen"
+  },
+  "manifest": {
+    "title": "Slack App Configuratie",
+    "description": "Maak een Slack app met het volgende manifest om te beginnen",
+    "copyButton": "Kopieer Manifest",
+    "copied": "Gekopieerd!",
+    "instructions": "1. Ga naar api.slack.com/apps\n2. Klik op 'Nieuwe App Maken'\n3. Kies 'Van een app manifest'\n4. Plak dit manifest\n5. Installeer de app in je werkruimte\n6. Kopieer de Bot User OAuth Token"
+  },
+  "results": {
+    "success": "Export succesvol voltooid!",
+    "error": "Export mislukt",
+    "exported": "{{count}} berichten geëxporteerd naar {{path}}",
+    "channel": "Kanaal: {{name}}"
+  },
+  "channels": {
+    "searchPlaceholder": "Zoek kanalen...",
+    "selectPlaceholder": "Selecteer een kanaal...",
+    "loading": "Kanalen laden...",
+    "noChannels": "Geen kanalen gevonden.",
+    "retry": "Opnieuw proberen",
+    "fetchError": "Fout bij ophalen kanalen",
+    "members": "{{count}} leden"
+  },
+  "validation": {
+    "validating": "Valideren...",
+    "valid": "Geldig",
+    "invalid": "Ongeldig",
+    "storedSecurely": "Veilig opgeslagen",
+    "connectedAs": "Verbonden als {{user}} @ {{team}}",
+    "tokenStoredInfo": "Token veilig opgeslagen op dit apparaat"
+  },
+  "errors": {
+    "tokenRequired": "Slack API token is vereist",
+    "channelRequired": "Kanaal ID is vereist",
+    "dateRequired": "Startdatum is vereist",
+    "pathRequired": "Uitvoerpad is vereist",
+    "invalidDate": "Ongeldig datumformaat",
+    "exportFailed": "Export mislukt: {{error}}"
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "app": {
+    "title": "Exportador de Slack",
+    "description": "Exportar mensajes de Slack a formatos DOCX y Markdown"
+  },
+  "export": {
+    "title": "Configuración de Exportación",
+    "single": "Canal Único",
+    "multiple": "Múltiples Canales",
+    "token": "Token de API de Slack",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Haz clic aquí para ver cómo crear una aplicación de Slack",
+    "channelId": "ID del Canal",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "Puedes encontrarlo en la URL de Slack o en los detalles del canal",
+    "startDate": "Fecha de Inicio",
+    "endDate": "Fecha de Fin (Opcional)",
+    "format": "Formato de Exportación",
+    "formatDocx": "Documento de Word (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "Ruta de Salida",
+    "chooseFile": "Elegir Archivo",
+    "chooseDirectory": "Elegir Directorio",
+    "concurrency": "Procesos Concurrentes",
+    "concurrencyHelp": "Número de exportaciones paralelas (1-10)",
+    "exportButton": "Exportar",
+    "exporting": "Exportando...",
+    "addChannel": "Agregar Canal",
+    "removeChannel": "Eliminar"
+  },
+  "manifest": {
+    "title": "Configuración de la Aplicación de Slack",
+    "description": "Crea una aplicación de Slack con el siguiente manifiesto para comenzar",
+    "copyButton": "Copiar Manifiesto",
+    "copied": "¡Copiado!",
+    "instructions": "1. Ve a api.slack.com/apps\n2. Haz clic en 'Crear Nueva Aplicación'\n3. Elige 'Desde un manifiesto de aplicación'\n4. Pega este manifiesto\n5. Instala la aplicación en tu espacio de trabajo\n6. Copia el Token OAuth del Usuario Bot"
+  },
+  "results": {
+    "success": "¡Exportación completada exitosamente!",
+    "error": "Falló la exportación",
+    "exported": "Se exportaron {{count}} mensajes a {{path}}",
+    "channel": "Canal: {{name}}"
+  },
+  "channels": {
+    "searchPlaceholder": "Buscar canales...",
+    "selectPlaceholder": "Seleccionar un canal...",
+    "loading": "Cargando canales...",
+    "noChannels": "No se encontraron canales.",
+    "retry": "Reintentar",
+    "fetchError": "Error al obtener canales",
+    "members": "{{count}} miembros"
+  },
+  "validation": {
+    "validating": "Validando...",
+    "valid": "Válido",
+    "invalid": "Inválido",
+    "storedSecurely": "Almacenado de forma segura",
+    "connectedAs": "Conectado como {{user}} @ {{team}}",
+    "tokenStoredInfo": "Token almacenado de forma segura en este dispositivo"
+  },
+  "errors": {
+    "tokenRequired": "Se requiere el token de API de Slack",
+    "channelRequired": "Se requiere el ID del canal",
+    "dateRequired": "Se requiere la fecha de inicio",
+    "pathRequired": "Se requiere la ruta de salida",
+    "invalidDate": "Formato de fecha inválido",
+    "exportFailed": "Falló la exportación: {{error}}"
+  }
+}
