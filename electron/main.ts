@@ -42,11 +42,19 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('export-slack', async (_, options) => {
+ipcMain.handle('export-slack', async (event, options) => {
   try {
     const adapter = new SlackMaxqdaAdapter({
       token: options.token,
-      concurrency: options.concurrency || 4
+      concurrency: options.concurrency || 4,
+      onProgress: (progress) => {
+        // Send progress update to renderer
+        event.sender.send('export-progress', progress)
+      },
+      onLog: (logEntry) => {
+        // Send log entry to renderer
+        event.sender.send('export-log', logEntry)
+      }
     })
     
     const result = await adapter.export({

@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, FileText, Loader2 } from 'lucide-react'
+import { Calendar, FileText, Loader2, ChevronDown, ChevronUp } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { Progress } from '@/components/ui/progress'
 import {
   Select,
   SelectContent,
@@ -13,6 +14,7 @@ import {
 } from '@/components/ui/select'
 import { SlackManifestDialog } from './SlackManifestDialog'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { ProgressUpdate, LogEntry } from '@/types/electron'
 
 export function ExportForm() {
   const { t } = useTranslation()
@@ -26,6 +28,24 @@ export function ExportForm() {
   const [isExporting, setIsExporting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState<any>(null)
+  const [progress, setProgress] = useState<ProgressUpdate | null>(null)
+  const [logs, setLogs] = useState<LogEntry[]>([])
+  const [showLogs, setShowLogs] = useState(false)
+
+  useEffect(() => {
+    const unsubscribeProgress = window.electronAPI.onProgress((progressUpdate: ProgressUpdate) => {
+      setProgress(progressUpdate)
+    })
+
+    const unsubscribeLog = window.electronAPI.onLog((logEntry: LogEntry) => {
+      setLogs(prev => [...prev, { ...logEntry, timestamp: new Date(logEntry.timestamp) }])
+    })
+
+    return () => {
+      unsubscribeProgress()
+      unsubscribeLog()
+    }
+  }, [])
 
   const handleChooseFile = async () => {
     const defaultName = `slack-export-${channelId}-${startDate}.${format}`
@@ -35,9 +55,13 @@ export function ExportForm() {
     }
   }
 
+
   const handleExport = async () => {
     setError('')
     setSuccess(null)
+    setProgress(null)
+    setLogs([])
+    setShowLogs(false)
 
     if (!token) {
       setError(t('errors.tokenRequired'))
@@ -77,6 +101,8 @@ export function ExportForm() {
       setError(t('errors.exportFailed', { error: (err as Error).message }))
     } finally {
       setIsExporting(false)
+      // Clear progress after a short delay to show completion
+      setTimeout(() => setProgress(null), 2000)
     }
   }
 
@@ -190,6 +216,71 @@ export function ExportForm() {
         <Alert variant="destructive">
           <AlertDescription>{error}</AlertDescription>
         </Alert>
+      )}
+
+      {progress && (
+        <div className="space-y-3">
+          <div className="flex justify-between items-center text-sm">
+            <span className="font-medium">{progress.message}</span>
+            <span className="text-muted-foreground">{progress.progress}%</span>
+          </div>
+          <Progress value={progress.progress} className="w-full" />
+          
+          {progress.stage === 'downloading' && progress.details && (
+            <div className="space-y-1">
+              <div className="text-xs text-muted-foreground">
+                Files: {progress.details.filesCompleted || 0} / {progress.details.totalFiles || 0}
+              </div>
+              {progress.details.currentFile && (
+                <div className="text-xs text-muted-foreground truncate">
+                  Current: {progress.details.currentFile}
+                </div>
+              )}
+            </div>
+          )}
+          
+          {progress.current !== undefined && progress.total !== undefined && progress.stage !== 'downloading' && (
+            <div className="text-xs text-muted-foreground">
+              {progress.current} / {progress.total}
+            </div>
+          )}
+          
+          {logs.length > 0 && (
+            <div className="border rounded-lg">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setShowLogs(!showLogs)}
+                className="w-full justify-between p-3 text-xs"
+              >
+                <span>Detailed Logs ({logs.length})</span>
+                {showLogs ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              </Button>
+              
+              {showLogs && (
+                <div className="border-t max-h-40 overflow-y-auto p-3 space-y-1">
+                  {logs.map((log, index) => (
+                    <div key={index} className="text-xs font-mono">
+                      <span className="text-muted-foreground">
+                        {log.timestamp.toLocaleTimeString()}
+                      </span>
+                      <span 
+                        className={`ml-2 ${
+                          log.level === 'error' ? 'text-red-500' :
+                          log.level === 'warning' ? 'text-yellow-500' :
+                          log.level === 'success' ? 'text-green-500' :
+                          'text-muted-foreground'
+                        }`}
+                      >
+                        {log.message}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       )}
 
       {success && (

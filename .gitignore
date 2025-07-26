@@ -37,3 +37,4 @@ release/
 
 # Development entry point
 electron-main.js
+files

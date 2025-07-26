@@ -1,3 +1,22 @@
+export interface ProgressUpdate {
+  stage: 'fetching' | 'processing' | 'downloading' | 'writing' | 'complete'
+  progress: number
+  message: string
+  current?: number
+  total?: number
+  details?: {
+    currentFile?: string
+    filesCompleted?: number
+    totalFiles?: number
+  }
+}
+
+export interface LogEntry {
+  timestamp: Date
+  level: 'info' | 'success' | 'warning' | 'error'
+  message: string
+}
+
 export interface IElectronAPI {
   exportSlack: (options: {
     token: string
@@ -47,6 +66,8 @@ export interface IElectronAPI {
   }>
   chooseDirectory: () => Promise<string | null>
   saveFileDialog: (defaultFileName: string) => Promise<string | null>
+  onProgress: (callback: (progress: ProgressUpdate) => void) => () => void
+  onLog: (callback: (logEntry: LogEntry) => void) => () => void
 }
 
 declare global {
