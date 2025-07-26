@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "Slack エクスポーター",
+    "description": "SlackメッセージをDOCXとMarkdown形式でエクスポート"
+  },
+  "export": {
+    "title": "エクスポート設定",
+    "single": "単一チャンネル",
+    "multiple": "複数チャンネル",
+    "token": "Slack APIトークン",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Slackアプリの作成方法を確認するにはここをクリック",
+    "channelId": "チャンネルID",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "Slack URLまたはチャンネル詳細で確認できます",
+    "startDate": "開始日",
+    "endDate": "終了日（オプション）",
+    "format": "エクスポート形式",
+    "formatDocx": "Word文書 (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "出力パス",
+    "chooseFile": "ファイルを選択",
+    "chooseDirectory": "ディレクトリを選択",
+    "concurrency": "並行処理数",
+    "concurrencyHelp": "並列エクスポート数 (1-10)",
+    "exportButton": "エクスポート",
+    "exporting": "エクスポート中...",
+    "addChannel": "チャンネルを追加",
+    "removeChannel": "削除"
+  },
+  "manifest": {
+    "title": "Slackアプリ設定",
+    "description": "以下のマニフェストでSlackアプリを作成してください",
+    "copyButton": "マニフェストをコピー",
+    "copied": "コピーしました！",
+    "instructions": "1. api.slack.com/appsにアクセス\n2. 「Create New App」をクリック\n3. 「From an app manifest」を選択\n4. このマニフェストを貼り付け\n5. ワークスペースにアプリをインストール\n6. Bot User OAuth Tokenをコピー"
+  },
+  "results": {
+    "success": "エクスポートが正常に完了しました！",
+    "error": "エクスポートに失敗しました",
+    "exported": "{{count}}件のメッセージを{{path}}にエクスポートしました",
+    "channel": "チャンネル: {{name}}"
+  },
+  "errors": {
+    "tokenRequired": "Slack APIトークンが必要です",
+    "channelRequired": "チャンネルIDが必要です",
+    "dateRequired": "開始日が必要です",
+    "pathRequired": "出力パスが必要です",
+    "invalidDate": "無効な日付形式です",
+    "exportFailed": "エクスポート失敗: {{error}}"
+  }
+}

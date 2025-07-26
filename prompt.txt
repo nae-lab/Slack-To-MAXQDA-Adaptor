@@ -1,0 +1,11 @@
+私が作成した https://github.com/nae-lab/slack-maxqda-adapter のGUIを作成してください．
+- slack-maxqda-adapterの入力パラメーターをライブラリから調べて，必要なinputを決める
+- slack tokenはユーザーが入力する
+  - slack appのマニフェストを表示して，ユーザーが適切な権限が設定されたappを作ることを支援する
+- github actionsでビルドしてインストーラーを配布できるとこまで実装
+- 多言語対応
+
+tech stack
+  - electron (slack apiをローカルでcallできるように)
+  - React
+  - shadcn/ui

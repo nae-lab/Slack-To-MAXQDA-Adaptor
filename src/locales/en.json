@@ -1,0 +1,52 @@
+{
+  "app": {
+    "title": "Slack Exporter",
+    "description": "Export Slack messages to DOCX and Markdown formats"
+  },
+  "export": {
+    "title": "Export Settings",
+    "single": "Single Channel",
+    "multiple": "Multiple Channels",
+    "token": "Slack API Token",
+    "tokenPlaceholder": "xoxb-your-slack-token",
+    "tokenHelp": "Click here to see how to create a Slack app",
+    "channelId": "Channel ID",
+    "channelIdPlaceholder": "C1234567890",
+    "channelIdHelp": "You can find this in Slack URL or channel details",
+    "startDate": "Start Date",
+    "endDate": "End Date (Optional)",
+    "format": "Export Format",
+    "formatDocx": "Word Document (.docx)",
+    "formatMd": "Markdown (.md)",
+    "outputPath": "Output Path",
+    "chooseFile": "Choose File",
+    "chooseDirectory": "Choose Directory",
+    "concurrency": "Concurrent Processes",
+    "concurrencyHelp": "Number of parallel exports (1-10)",
+    "exportButton": "Export",
+    "exporting": "Exporting...",
+    "addChannel": "Add Channel",
+    "removeChannel": "Remove"
+  },
+  "manifest": {
+    "title": "Slack App Configuration",
+    "description": "Create a Slack app with the following manifest to get started",
+    "copyButton": "Copy Manifest",
+    "copied": "Copied!",
+    "instructions": "1. Go to api.slack.com/apps\n2. Click 'Create New App'\n3. Choose 'From an app manifest'\n4. Paste this manifest\n5. Install the app to your workspace\n6. Copy the Bot User OAuth Token"
+  },
+  "results": {
+    "success": "Export completed successfully!",
+    "error": "Export failed",
+    "exported": "Exported {{count}} messages to {{path}}",
+    "channel": "Channel: {{name}}"
+  },
+  "errors": {
+    "tokenRequired": "Slack API token is required",
+    "channelRequired": "Channel ID is required",
+    "dateRequired": "Start date is required",
+    "pathRequired": "Output path is required",
+    "invalidDate": "Invalid date format",
+    "exportFailed": "Export failed: {{error}}"
+  }
+}
