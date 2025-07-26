@@ -4,6 +4,9 @@ on:
   push:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     strategy:
@@ -83,62 +86,13 @@ jobs:
           path: dist-artifacts
 
       - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          files: |
+            dist-artifacts/**/*.exe
+            dist-artifacts/**/*.dmg
+            dist-artifacts/**/*.zip
+            dist-artifacts/**/*.AppImage
+            dist-artifacts/**/*.deb
           draft: false
           prerelease: false
-
-      - name: Upload Release Assets
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const fs = require('fs');
-            const path = require('path');
-            
-            const releaseId = '${{ steps.create_release.outputs.id }}';
-            const artifactsDir = 'dist-artifacts';
-            
-            const uploadAsset = async (filePath, fileName) => {
-              console.log(`Uploading ${fileName}...`);
-              const stats = fs.statSync(filePath);
-              const data = fs.readFileSync(filePath);
-              
-              await github.rest.repos.uploadReleaseAsset({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                release_id: releaseId,
-                name: fileName,
-                data: data,
-                headers: {
-                  'content-type': 'application/octet-stream',
-                  'content-length': stats.size
-                }
-              });
-            };
-            
-            const walkDir = async (dir) => {
-              const files = fs.readdirSync(dir);
-              for (const file of files) {
-                const filePath = path.join(dir, file);
-                const stat = fs.statSync(filePath);
-                if (stat.isDirectory()) {
-                  await walkDir(filePath);
-                } else if (
-                  file.endsWith('.exe') ||
-                  file.endsWith('.dmg') ||
-                  file.endsWith('.zip') ||
-                  file.endsWith('.AppImage') ||
-                  file.endsWith('.deb')
-                ) {
-                  await uploadAsset(filePath, file);
-                }
-              }
-            };
-            
-            await walkDir(artifactsDir);
