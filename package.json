@@ -2,6 +2,8 @@
   "name": "slack-to-maxqda-adapter-electron",
   "private": true,
   "version": "1.0.0",
+  "author": "nae-lab <nae-lab@example.com>",
+  "description": "Slack to MAXQDA Adapter - Export Slack conversations for MAXQDA analysis",
   "main": "./dist-electron/main.js",
   "scripts": {
     "dev": "vite",
