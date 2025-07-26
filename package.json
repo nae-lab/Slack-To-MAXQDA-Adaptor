@@ -47,7 +47,7 @@
     "react-i18next": "^14.0.5",
     "semver": "^7.7.2",
     "sharp": "^0.33.5",
-    "slack-maxqda-adapter": "file:../slack-exporter",
+    "slack-maxqda-adapter": "^2.2.2",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
     "universal-emoji-parser": "^2.0.52",
@@ -78,7 +78,7 @@
   },
   "build": {
     "appId": "com.naelab.slack-exporter",
-    "productName": "Slack Exporter",
+    "productName": "Nae Slack to MAXQDA Adaptor",
     "directories": {
       "output": "dist"
     },
