@@ -17,6 +17,15 @@ export interface LogEntry {
   message: string
 }
 
+export interface SlackChannel {
+  id: string
+  name: string
+  isPrivate: boolean
+  memberCount: number
+  purpose: string
+  topic: string
+}
+
 export interface IElectronAPI {
   exportSlack: (options: {
     token: string
@@ -66,6 +75,26 @@ export interface IElectronAPI {
   }>
   chooseDirectory: () => Promise<string | null>
   saveFileDialog: (defaultFileName: string) => Promise<string | null>
+  
+  // Secure token storage
+  storeSlackToken: (token: string) => Promise<{ success: boolean; error?: string }>
+  getSlackToken: () => Promise<{ success: boolean; token?: string | null; error?: string }>
+  clearSlackToken: () => Promise<{ success: boolean; error?: string }>
+  hasSlackToken: () => Promise<{ success: boolean; hasToken?: boolean; error?: string }>
+  validateSlackToken: (token: string) => Promise<{ 
+    success: boolean; 
+    user?: string; 
+    team?: string; 
+    teamId?: string; 
+    userId?: string; 
+    error?: string 
+  }>
+  getChannels: (token: string) => Promise<{
+    success: boolean;
+    channels?: SlackChannel[];
+    error?: string;
+  }>
+  
   onProgress: (callback: (progress: ProgressUpdate) => void) => () => void
   onLog: (callback: (logEntry: LogEntry) => void) => () => void
 }

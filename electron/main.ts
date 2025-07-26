@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { SlackMaxqdaAdapter } from 'slack-maxqda-adapter'
 import { WebClient } from '@slack/web-api'
+import { secureStorage } from './storage'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -138,4 +139,104 @@ ipcMain.handle('save-file-dialog', async (_, defaultFileName: string) => {
     return result.filePath
   }
   return null
+})
+
+// Secure token storage handlers
+ipcMain.handle('store-slack-token', async (_, token: string) => {
+  try {
+    secureStorage.setSlackToken(token)
+    return { success: true }
+  } catch (error) {
+    console.error('Error storing token:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('get-slack-token', async () => {
+  try {
+    const token = secureStorage.getSlackToken()
+    return { success: true, token }
+  } catch (error) {
+    console.error('Error retrieving token:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('clear-slack-token', async () => {
+  try {
+    secureStorage.clearSlackToken()
+    return { success: true }
+  } catch (error) {
+    console.error('Error clearing token:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('has-slack-token', async () => {
+  try {
+    const hasToken = secureStorage.hasSlackToken()
+    return { success: true, hasToken }
+  } catch (error) {
+    console.error('Error checking token:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('validate-slack-token', async (_, token: string) => {
+  try {
+    const client = new WebClient(token)
+    const result = await client.auth.test()
+    
+    if (result.ok) {
+      return { 
+        success: true, 
+        user: result.user,
+        team: result.team,
+        teamId: result.team_id,
+        userId: result.user_id
+      }
+    } else {
+      return { success: false, error: 'Invalid token' }
+    }
+  } catch (error) {
+    console.error('Token validation error:', error)
+    return { success: false, error: error.message }
+  }
+})
+
+ipcMain.handle('get-channels', async (_, token: string) => {
+  try {
+    const client = new WebClient(token)
+    const channels = []
+    let cursor = undefined
+    
+    // Fetch all public channels
+    do {
+      const result = await client.conversations.list({
+        types: 'public_channel,private_channel',
+        exclude_archived: true,
+        limit: 200,
+        cursor
+      })
+      
+      if (result.ok && result.channels) {
+        channels.push(...result.channels.map(channel => ({
+          id: channel.id,
+          name: channel.name,
+          isPrivate: channel.is_private,
+          memberCount: channel.num_members,
+          purpose: channel.purpose?.value || '',
+          topic: channel.topic?.value || ''
+        })))
+        cursor = result.response_metadata?.next_cursor
+      } else {
+        break
+      }
+    } while (cursor)
+    
+    return { success: true, channels }
+  } catch (error) {
+    console.error('Get channels error:', error)
+    return { success: false, error: error.message }
+  }
 })

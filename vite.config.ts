@@ -20,7 +20,9 @@ export default defineConfig({
               external: [
                 'electron',
                 'sharp',
-                'slack-maxqda-adapter'
+                'slack-maxqda-adapter',
+                'electron-store',
+                'node-machine-id'
               ],
               output: {
                 format: 'cjs'

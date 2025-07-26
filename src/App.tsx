@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Languages } from 'lucide-react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   Select,
   SelectContent,
@@ -22,10 +21,10 @@ function App() {
       <div className="container mx-auto p-6 max-w-4xl">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-3xl font-bold">{t('app.title')}</h1>
-            <p className="text-muted-foreground mt-2">{t('app.description')}</p>
+            <h1 className="text-3xl font-bold">{t("app.title")}</h1>
+            <p className="text-muted-foreground mt-2">{t("app.description")}</p>
           </div>
-          
+
           <Select value={i18n.language} onValueChange={handleLanguageChange}>
             <SelectTrigger className="w-[140px]">
               <Languages className="w-4 h-4 mr-2" />
@@ -38,14 +37,14 @@ function App() {
           </Select>
         </div>
 
-        <Tabs defaultValue="single" className="w-full">
+        <ExportForm />
+        {/* <Tabs defaultValue="single" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="single">{t('export.single')}</TabsTrigger>
             <TabsTrigger value="multiple" disabled>{t('export.multiple')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="single" className="mt-6">
-            <ExportForm />
           </TabsContent>
           
           <TabsContent value="multiple" className="mt-6">
@@ -53,10 +52,10 @@ function App() {
               Multiple channel export coming soon...
             </div>
           </TabsContent>
-        </Tabs>
+        </Tabs> */}
       </div>
     </div>
-  )
+  );
 }
 
 export default App

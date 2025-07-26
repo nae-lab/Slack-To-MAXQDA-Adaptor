@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, FileText, Loader2, ChevronDown, ChevronUp } from 'lucide-react'
+import { Calendar, FileText, Loader2, ChevronDown, ChevronUp, Eye, EyeOff, Trash2, CheckCircle, XCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -13,15 +13,24 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { SlackManifestDialog } from './SlackManifestDialog'
+import { ChannelSelector } from './ChannelSelector'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ProgressUpdate, LogEntry } from '@/types/electron'
 
 export function ExportForm() {
   const { t } = useTranslation()
   const [token, setToken] = useState('')
+  const [hasStoredToken, setHasStoredToken] = useState(false)
+  const [showToken, setShowToken] = useState(false)
+  const [tokenValidation, setTokenValidation] = useState<{
+    status: 'idle' | 'validating' | 'valid' | 'invalid'
+    user?: string
+    team?: string
+    error?: string
+  }>({ status: 'idle' })
   const [channelId, setChannelId] = useState('')
   const [startDate, setStartDate] = useState('')
-  const [endDate, setEndDate] = useState('')
+  const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
   const [format, setFormat] = useState<'docx' | 'md'>('docx')
   const [outputPath, setOutputPath] = useState('')
   const [concurrency, setConcurrency] = useState(4)
@@ -41,11 +50,93 @@ export function ExportForm() {
       setLogs(prev => [...prev, { ...logEntry, timestamp: new Date(logEntry.timestamp) }])
     })
 
+    // Load stored token on component mount
+    loadStoredToken()
+
     return () => {
       unsubscribeProgress()
       unsubscribeLog()
     }
   }, [])
+
+  const loadStoredToken = async () => {
+    try {
+      const result = await window.electronAPI.getSlackToken()
+      if (result.success && result.token) {
+        setToken(result.token)
+        setHasStoredToken(true)
+        // Validate the stored token
+        await validateToken(result.token)
+      } else {
+        setHasStoredToken(false)
+      }
+    } catch (error) {
+      console.error('Error loading stored token:', error)
+      setHasStoredToken(false)
+    }
+  }
+
+  const validateToken = async (tokenToValidate: string) => {
+    if (!tokenToValidate) {
+      setTokenValidation({ status: 'idle' })
+      return
+    }
+
+    setTokenValidation({ status: 'validating' })
+    
+    try {
+      const result = await window.electronAPI.validateSlackToken(tokenToValidate)
+      if (result.success) {
+        setTokenValidation({
+          status: 'valid',
+          user: result.user,
+          team: result.team
+        })
+      } else {
+        setTokenValidation({
+          status: 'invalid',
+          error: result.error
+        })
+      }
+    } catch (error) {
+      setTokenValidation({
+        status: 'invalid',
+        error: 'Validation failed'
+      })
+    }
+  }
+
+  const handleTokenChange = async (newToken: string) => {
+    setToken(newToken)
+    
+    // Clear previous validation
+    setTokenValidation({ status: 'idle' })
+    
+    if (newToken) {
+      try {
+        await window.electronAPI.storeSlackToken(newToken)
+        setHasStoredToken(true)
+        
+        // Debounced validation
+        setTimeout(() => validateToken(newToken), 1000)
+      } catch (error) {
+        console.error('Error storing token:', error)
+      }
+    } else {
+      setHasStoredToken(false)
+    }
+  }
+
+  const handleClearToken = async () => {
+    try {
+      await window.electronAPI.clearSlackToken()
+      setToken('')
+      setHasStoredToken(false)
+      setTokenValidation({ status: 'idle' })
+    } catch (error) {
+      console.error('Error clearing token:', error)
+    }
+  }
 
   const handleChooseFile = async () => {
     const defaultName = `slack-export-${channelId}-${startDate}.${format}`
@@ -109,24 +200,90 @@ export function ExportForm() {
   return (
     <div className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="token">{t('export.token')}</Label>
-        <Input
-          id="token"
-          type="password"
-          placeholder={t('export.tokenPlaceholder')}
-          value={token}
-          onChange={(e) => setToken(e.target.value)}
-        />
-        <SlackManifestDialog />
+        <div className="flex justify-between items-center">
+          <Label htmlFor="token">{t('export.token')}</Label>
+          <div className="flex items-center gap-2">
+            {tokenValidation.status === 'validating' && (
+              <div className="flex items-center gap-1">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                <span className="text-xs text-muted-foreground">Validating...</span>
+              </div>
+            )}
+            {tokenValidation.status === 'valid' && (
+              <div className="flex items-center gap-1">
+                <CheckCircle className="h-3 w-3 text-green-600" />
+                <span className="text-xs text-green-600">Valid</span>
+              </div>
+            )}
+            {tokenValidation.status === 'invalid' && (
+              <div className="flex items-center gap-1">
+                <XCircle className="h-3 w-3 text-red-600" />
+                <span className="text-xs text-red-600">Invalid</span>
+              </div>
+            )}
+            {hasStoredToken && (
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-green-600">Stored securely</span>
+                <Button
+                  onClick={handleClearToken}
+                  variant="ghost"
+                  size="sm"
+                  className="h-6 w-6 p-0"
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="relative">
+          <Input
+            id="token"
+            type={showToken ? "text" : "password"}
+            placeholder={t('export.tokenPlaceholder')}
+            value={token}
+            onChange={(e) => handleTokenChange(e.target.value)}
+          />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="absolute right-0 top-0 h-full px-3"
+            onClick={() => setShowToken(!showToken)}
+          >
+            {showToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </Button>
+        </div>
+        <div className="flex justify-between items-start">
+          <SlackManifestDialog />
+          <div className="flex flex-col items-end gap-1">
+            {tokenValidation.status === 'valid' && tokenValidation.user && tokenValidation.team && (
+              <div className="text-xs text-green-600">
+                Connected as {tokenValidation.user} @ {tokenValidation.team}
+              </div>
+            )}
+            {tokenValidation.status === 'invalid' && tokenValidation.error && (
+              <div className="text-xs text-red-600">
+                {tokenValidation.error}
+              </div>
+            )}
+            {token && (
+              <span className="text-xs text-muted-foreground">
+                Token stored securely on this device
+              </span>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="channelId">{t('export.channelId')}</Label>
-        <Input
-          id="channelId"
-          placeholder={t('export.channelIdPlaceholder')}
+        <ChannelSelector
+          token={token}
           value={channelId}
-          onChange={(e) => setChannelId(e.target.value)}
+          onValueChange={setChannelId}
+          placeholder={t('export.channelIdPlaceholder')}
+          disabled={tokenValidation.status !== 'valid'}
         />
         <p className="text-sm text-muted-foreground">{t('export.channelIdHelp')}</p>
       </div>
