@@ -1,7 +1,7 @@
 {
   "name": "slack-to-maxqda-adapter-electron",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "nae-lab <nae-lab@example.com>",
   "description": "Slack to MAXQDA Adapter - Export Slack conversations for MAXQDA analysis",
   "main": "./dist-electron/main.js",
@@ -16,8 +16,7 @@
     "dist": "vite build && electron-builder",
     "dist:mac": "vite build && electron-builder --mac",
     "dist:win": "vite build && electron-builder --win",
-    "dist:linux": "vite build && electron-builder --linux",
-    "version": "pnpm version patch && git tag v$(node -p \"require('./package.json').version\")"
+    "dist:linux": "vite build && electron-builder --linux"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.0.5",
