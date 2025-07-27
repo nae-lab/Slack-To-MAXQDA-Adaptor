@@ -1,10 +1,10 @@
-# Slack Exporter Electron
+# Slack to MAXQDA Adapter
 
-A desktop application for exporting Slack messages to DOCX and Markdown formats.
+A desktop application for exporting Slack conversations to MAXQDA-compatible formats for qualitative analysis.
 
 ## Features
 
-- Export Slack channel messages to DOCX or Markdown format
+- Export Slack channel messages to DOCX or Markdown format for MAXQDA analysis
 - User-friendly GUI built with Electron and React
 - Multi-language support (English and Japanese)
 - Slack app manifest generator for easy setup
@@ -12,7 +12,7 @@ A desktop application for exporting Slack messages to DOCX and Markdown formats.
 
 ## Installation
 
-Download the latest release for your platform from the [Releases](https://github.com/nae-lab/slack-exporter-electron/releases) page.
+Download the latest release for your platform from the [Releases](https://github.com/nae-lab/Slack-To-MAXQDA-Adaptor/releases) page.
 
 ## Development
 
@@ -25,8 +25,8 @@ Download the latest release for your platform from the [Releases](https://github
 
 ```bash
 # Clone the repository
-git clone https://github.com/nae-lab/slack-exporter-electron.git
-cd slack-exporter-electron
+git clone https://github.com/nae-lab/Slack-To-MAXQDA-Adaptor.git
+cd Slack-To-MAXQDA-Adaptor
 
 # Install dependencies
 npm install

@@ -1,9 +1,9 @@
-# Slack Exporter Electron TODO
+# Slack to MAXQDA Adapter TODO
 
 ## プロジェクト概要
 - **目的**: slack-maxqda-adapter (slack-exporter) のGUIアプリケーションを作成
 - **リポジトリ**: 
-  - `/Users/yuchi/workspace/nae-lab/git/slack-exporter-electron` (GUIアプリ)
+  - `/Users/yuchi/workspace/nae-lab/git/Slack-To-MAXQDA-Adaptor` (GUIアプリ)
   - `/Users/yuchi/workspace/nae-lab/git/slack-exporter` (ライブラリ)
 
 ## 実装済み機能
@@ -36,7 +36,7 @@
 
 ## ファイル構造
 ```
-slack-exporter-electron/
+Slack-To-MAXQDA-Adaptor/
 ├── electron/
 │   ├── main.ts          # Electron main process (現在モック実装)
 │   └── preload.ts       # Preload script
@@ -83,7 +83,7 @@ slack-exporter-electron/
 ## 完了した作業（2025-07-25）
 - slack-exporterのpackage.jsonにprepareスクリプトを追加
 - slack-exporterのfilesフィールドにsrcとtsconfig.jsonを追加
-- slack-exporter-electronでGitHub経由でslack-exporterをインストール
+- Slack-To-MAXQDA-AdaptorでGitHub経由でslack-exporterをインストール
 - Electronメインプロセスで実際のSlackExporter APIを使用するよう実装
 - TypeScriptエラーの修正（React importの削除など）
 - ビルドと動作確認の完了
