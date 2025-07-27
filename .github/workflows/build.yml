@@ -56,8 +56,7 @@ jobs:
           pnpm run dist:mac
         env:
           EP_NEVER_PUBLISH: true
-          CSC_LINK: ${{ secrets.MAC_CERTS }}
-          CSC_KEY_PASSWORD: ${{ secrets.MAC_CERTS_PASSWORD }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
 
       - name: Build Electron app (Linux)
         if: matrix.os == 'ubuntu-latest'
