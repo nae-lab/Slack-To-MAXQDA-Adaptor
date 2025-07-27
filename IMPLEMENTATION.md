@@ -1,4 +1,4 @@
-# Slack Exporter Electron Implementation
+# Slack to MAXQDA Adapter Implementation
 
 ## Overview
 
@@ -49,7 +49,7 @@ This is a GUI application for the slack-maxqda-adapter (slack-exporter) library 
 ## Project Structure
 
 ```
-slack-exporter-electron/
+Slack-To-MAXQDA-Adaptor/
 ├── electron/
 │   ├── main.ts          # Electron main process
 │   └── preload.ts       # Preload script for IPC
