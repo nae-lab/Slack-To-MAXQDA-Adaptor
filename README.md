@@ -1,12 +1,18 @@
 # Slack to MAXQDA Adapter
 
-A desktop application for exporting Slack conversations to MAXQDA-compatible formats for qualitative analysis.
+## Translations
+
+This README is available in the following languages (AI-generated translations):
+
+- [日本語 (Japanese)](docs/README_ja.md)
+- [한국어 (Korean)](docs/README_ko.md)
+- [Suomi (Finnish)](docs/README_fi.md)
 
 ## Features
 
 - Export Slack channel messages to DOCX or Markdown format for MAXQDA analysis
 - User-friendly GUI built with Electron and React
-- Multi-language support (English and Japanese)
+- Multi-language support (AI-transtation: English, Japanese, Korean, Finnish, Chinese, Mandarin, Spanish, Portuguese, Dutch, Ukrainian)
 - Slack app manifest generator for easy setup
 - Cross-platform support (Windows, macOS, Linux)
 
