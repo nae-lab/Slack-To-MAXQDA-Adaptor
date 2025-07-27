@@ -15,7 +15,7 @@ function createWindow() {
       contextIsolation: true,
       nodeIntegration: false
     },
-    icon: join(__dirname, '../public/icon.png')
+    icon: join(__dirname, '../public/app-iconpng.png')
   })
 
   if (process.env.NODE_ENV === 'development') {

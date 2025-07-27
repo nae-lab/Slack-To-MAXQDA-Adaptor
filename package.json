@@ -90,13 +90,14 @@
       "output": "dist",
       "buildResources": "build"
     },
+    "icon": "public/app-iconpng.png",
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
       "!**/*.map",
       "!**/*.ts"
     ],
-    "compression": "maximum",
+    "compression": "normal",
     "npmRebuild": false,
     "buildDependenciesFromSource": false,
     "nodeGypRebuild": false,
