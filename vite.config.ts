@@ -9,51 +9,69 @@ export default defineConfig({
     react(),
     electron([
       {
-        entry: 'electron/main.ts',
+        entry: "electron/main.ts",
         onstart() {
           // Prevent automatic electron startup
         },
         vite: {
           build: {
-            outDir: 'dist-electron',
+            outDir: "dist-electron",
+            minify: "esbuild",
             rollupOptions: {
               external: [
-                'electron',
-                'sharp',
-                'slack-maxqda-adapter',
-                'electron-store',
-                'node-machine-id'
+                "electron",
+                "slack-maxqda-adapter",
+                "electron-store",
+                "node-machine-id",
+                "image-size",
               ],
               output: {
-                format: 'cjs'
-              }
-            }
-          }
-        }
+                format: "cjs",
+              },
+            },
+          },
+        },
       },
       {
-        entry: 'electron/preload.ts',
+        entry: "electron/preload.ts",
         onstart() {
           // Prevent automatic electron startup
         },
         vite: {
           build: {
-            outDir: 'dist-electron',
+            outDir: "dist-electron",
+            minify: "esbuild",
             rollupOptions: {
-              external: ['electron'],
+              external: ["electron"],
               output: {
-                format: 'cjs'
-              }
-            }
-          }
-        }
-      }
+                format: "cjs",
+              },
+            },
+          },
+        },
+      },
     ]),
-    renderer()
+    renderer(),
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  }
-})
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+  build: {
+    minify: "esbuild",
+    target: "esnext",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom"],
+          ui: [
+            "@radix-ui/react-dialog",
+            "@radix-ui/react-select",
+            "@radix-ui/react-tabs",
+          ],
+        },
+      },
+    },
+  },
+});

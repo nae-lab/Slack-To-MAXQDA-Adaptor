@@ -4,9 +4,9 @@ const { spawn } = require('child_process');
 const path = require('path');
 
 // Start Vite dev server
-const vite = spawn('pnpm', ['vite'], {
-  stdio: 'inherit',
-  shell: true
+const vite = spawn("npm", ["run", "dev"], {
+  stdio: "inherit",
+  shell: true,
 });
 
 // Wait for Vite to start, then launch Electron

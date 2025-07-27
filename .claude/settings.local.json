@@ -3,7 +3,14 @@
     "allow": [
       "WebFetch(domain:zenn.dev)",
       "WebFetch(domain:www.electronforge.io)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(npm run build)",
+      "Bash(pnpm build)",
+      "Bash(pnpm rebuild sharp)",
+      "Bash(pnpm electron-rebuild)",
+      "Bash(find node_modules/slack-maxqda-adapter -name \"*.js\" -exec grep -l \"sharp\" {} ;)",
+      "Bash(find . -name \"*.json\" -exec grep -l \"sharp\" {} ;)",
+      "Bash(pnpm install)"
     ],
     "deny": []
   }

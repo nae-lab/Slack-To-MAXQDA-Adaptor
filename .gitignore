@@ -4,20 +4,43 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-electron
-dist-ssr
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependencies
+node_modules/
+.npm
+.pnpm-debug.log*
+
+# Build outputs
+dist/
+dist-electron/
+dist-ssr/
 *.local
 
-# Editor directories and files
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+
+# Editors
 .vscode/*
 !.vscode/extensions.json
+!.vscode/settings.json
 .idea
-.DS_Store
 *.suo
 *.ntvs*
 *.njsproj
@@ -27,6 +50,7 @@ dist-ssr
 # Electron
 out/
 release/
+builder-effective-config.yaml
 
 # Environment files
 .env
@@ -35,7 +59,16 @@ release/
 .env.test.local
 .env.production.local
 
-# Development entry point
+# Development
 electron-main.js
-files
+files/
 .specstory
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+.tmp/
+*.tmp
+*.temp
