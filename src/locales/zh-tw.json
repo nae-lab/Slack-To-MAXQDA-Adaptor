@@ -28,6 +28,14 @@
     "addChannel": "新增頻道",
     "removeChannel": "移除"
   },
+  "tokenSelector": {
+    "noTokens": "沒有可用的權牌",
+    "selectToken": "選擇權牌",
+    "addToken": "新增權牌",
+    "addNewToken": "新增新權牌",
+    "addTokenDescription": "新增 Slack API 權牌。組織和使用者資訊將自動取得。",
+    "adding": "正在新增..."
+  },
   "manifest": {
     "title": "Slack 應用程式設定",
     "description": "使用以下清單建立 Slack 應用程式以開始使用",
@@ -46,6 +54,7 @@
     "selectPlaceholder": "選擇頻道...",
     "loading": "載入頻道中...",
     "noChannels": "未找到頻道。",
+    "selectTokenFirst": "請先選擇一個權牌。",
     "retry": "重試",
     "fetchError": "取得頻道失敗",
     "members": "{{count}} 位成員"
@@ -65,5 +74,12 @@
     "pathRequired": "需要輸出路徑",
     "invalidDate": "無效的日期格式",
     "exportFailed": "匯出失敗：{{error}}"
+  },
+  "common": {
+    "cancel": "取消",
+    "save": "儲存",
+    "delete": "刪除",
+    "edit": "編輯",
+    "ok": "確定"
   }
 }
