@@ -91,7 +91,7 @@
       "output": "dist",
       "buildResources": "build"
     },
-    "icon": "build/app-iconpng.png",
+    "icon": "build/icon.png",
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
