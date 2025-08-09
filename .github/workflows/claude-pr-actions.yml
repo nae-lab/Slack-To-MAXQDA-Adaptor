@@ -4,7 +4,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
-  id-token: write
+  id-token: write  
 
 on:
   issue_comment:
@@ -38,8 +38,8 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-      - uses: ./.github/actions/claude-pr-action
+      
+      - uses: anthropics/claude-code-github-actions@v1
         with:
           trigger_phrase: "@claude"
           timeout_minutes: "60"
