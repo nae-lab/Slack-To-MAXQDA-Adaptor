@@ -19,6 +19,8 @@
     "formatDocx": "Word Dokumentti (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "Tulostuspolku",
+    "outputPathPlaceholder": "Valitse tiedosto",
+    "folderStructureNote": "Kansiorakenne: {{channelName}}_at_{{date}}/ sisältää tiedoston ja files-alikansion",
     "chooseFile": "Valitse Tiedosto",
     "chooseDirectory": "Valitse Hakemisto",
     "concurrency": "Samanaikaiset Prosessit",

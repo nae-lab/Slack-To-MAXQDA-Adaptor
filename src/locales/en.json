@@ -19,6 +19,8 @@
     "formatDocx": "Word Document (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "Output Path",
+    "outputPathPlaceholder": "Please choose a file",
+    "folderStructureNote": "Folder structure: {{channelName}}_at_{{date}}/ will contain the file and a files subfolder",
     "chooseFile": "Choose File",
     "chooseDirectory": "Choose Directory",
     "concurrency": "Concurrent Processes",

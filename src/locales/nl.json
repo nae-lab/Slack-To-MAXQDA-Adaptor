@@ -19,6 +19,8 @@
     "formatDocx": "Word Document (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "Uitvoerpad",
+    "outputPathPlaceholder": "Kies een bestand",
+    "folderStructureNote": "Mapstructuur: {{channelName}}_at_{{date}}/ zal het bestand en een files submap bevatten",
     "chooseFile": "Kies Bestand",
     "chooseDirectory": "Kies Directory",
     "concurrency": "Gelijktijdige Processen",

@@ -40,6 +40,7 @@ export function ExportForm() {
   const [progress, setProgress] = useState<ProgressUpdate | null>(null)
   const [logs, setLogs] = useState<LogEntry[]>([])
   const [showLogs, setShowLogs] = useState(false)
+  const [channelName, setChannelName] = useState('')
 
   useEffect(() => {
     const unsubscribeProgress = window.electronAPI.onProgress((progressUpdate: ProgressUpdate) => {
@@ -144,6 +145,46 @@ export function ExportForm() {
     if (path) {
       setOutputPath(path)
     }
+  }
+
+  // Fetch channel name when channelId changes
+  const fetchChannelName = async (newChannelId: string) => {
+    if (!newChannelId || !token) {
+      setChannelName('')
+      return
+    }
+    
+    try {
+      const result = await window.electronAPI.getChannelName({ token, channelId: newChannelId })
+      if (result.success && result.channelName) {
+        setChannelName(result.channelName)
+      } else {
+        setChannelName(newChannelId) // Fallback to ID if name fetch fails
+      }
+    } catch (error) {
+      setChannelName(newChannelId) // Fallback to ID if error
+    }
+  }
+
+  const handleChannelChange = (newChannelId: string) => {
+    setChannelId(newChannelId)
+    fetchChannelName(newChannelId)
+  }
+
+  // Generate display path showing the new folder structure
+  const getDisplayPath = () => {
+    if (!outputPath) return ''
+    
+    // Use fetched channel name or fallback to channelId
+    const displayChannelName = channelName || channelId || 'channel'
+    
+    // Get current date
+    const currentDate = new Date().toISOString().split('T')[0]
+    const folderName = `${displayChannelName}_at_${currentDate}`
+    
+    // Get the directory from outputPath and combine with new structure
+    const outputDir = outputPath.substring(0, outputPath.lastIndexOf('/'))
+    return `${outputDir}/${folderName}/`
   }
 
 
@@ -281,7 +322,7 @@ export function ExportForm() {
         <ChannelSelector
           token={token}
           value={channelId}
-          onValueChange={setChannelId}
+          onValueChange={handleChannelChange}
           placeholder={t('export.channelIdPlaceholder')}
           disabled={tokenValidation.status !== 'valid'}
         />
@@ -346,14 +387,23 @@ export function ExportForm() {
         <div className="flex gap-2">
           <Input
             id="outputPath"
-            value={outputPath}
+            value={getDisplayPath()}
             onChange={(e) => setOutputPath(e.target.value)}
             readOnly
+            placeholder={t('export.outputPathPlaceholder')}
           />
           <Button onClick={handleChooseFile} variant="outline">
             {t('export.chooseFile')}
           </Button>
         </div>
+        {outputPath && channelName && (
+          <p className="text-sm text-muted-foreground">
+            {t('export.folderStructureNote', { 
+              channelName, 
+              date: new Date().toISOString().split('T')[0] 
+            })}
+          </p>
+        )}
       </div>
 
       <div className="space-y-2">

@@ -19,6 +19,8 @@
     "formatDocx": "Word 문서 (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "출력 경로",
+    "outputPathPlaceholder": "파일을 선택해주세요",
+    "folderStructureNote": "폴더 구조: {{channelName}}_at_{{date}}/ 안에 파일과 files 하위폴더가 생성됩니다",
     "chooseFile": "파일 선택",
     "chooseDirectory": "디렉토리 선택",
     "concurrency": "동시 처리 수",
