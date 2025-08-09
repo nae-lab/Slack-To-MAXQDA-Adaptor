@@ -19,6 +19,8 @@
     "formatDocx": "Documento do Word (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "Caminho de Saída",
+    "outputPathPlaceholder": "Por favor escolha um arquivo",
+    "folderStructureNote": "Estrutura de pastas: {{channelName}}_at_{{date}}/ conterá o arquivo e uma subpasta files",
     "chooseFile": "Escolher Arquivo",
     "chooseDirectory": "Escolher Diretório",
     "concurrency": "Processos Concorrentes",

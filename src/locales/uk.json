@@ -19,6 +19,8 @@
     "formatDocx": "Документ Word (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "Шлях Виводу",
+    "outputPathPlaceholder": "Будь ласка, виберіть файл",
+    "folderStructureNote": "Структура папок: {{channelName}}_at_{{date}}/ міститиме файл та підпапку files",
     "chooseFile": "Вибрати Файл",
     "chooseDirectory": "Вибрати Директорію",
     "concurrency": "Паралельні Процеси",

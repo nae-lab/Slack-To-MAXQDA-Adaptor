@@ -19,6 +19,8 @@
     "formatDocx": "Word 文件 (.docx)",
     "formatMd": "Markdown (.md)",
     "outputPath": "輸出路徑",
+    "outputPathPlaceholder": "請選擇檔案",
+    "folderStructureNote": "檔案夹結構：{{channelName}}_at_{{date}}/ 將包含檔案和 files 子檔案夹",
     "chooseFile": "選擇檔案",
     "chooseDirectory": "選擇目錄",
     "concurrency": "並行處理程序",
