@@ -1,7 +1,7 @@
-name: Claude PR Action
+name: Claude PR Assistant
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
   issues: write
   id-token: write
@@ -13,17 +13,22 @@ on:
     types: [created]
   issues:
     types: [opened, assigned]
+  pull_request_review:
+    types: [submitted]
 
 jobs:
-  claude-pr:
+  claude-code-action:
     if: |
       (github.event_name == 'issue_comment' && contains(github.event.comment.body, '@claude')) ||
       (github.event_name == 'pull_request_review_comment' && contains(github.event.comment.body, '@claude')) ||
+      (github.event_name == 'pull_request_review' && contains(github.event.review.body, '@claude')) ||
       (github.event_name == 'issues' && contains(github.event.issue.body, '@claude'))
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Generate GitHub App token
         id: app-token
@@ -39,9 +44,9 @@ jobs:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
-      - uses: anthropics/claude-code-base-action@v0.0.55
+      - name: Run Claude PR Action
+        uses: anthropics/claude-code-action@beta
         with:
-          prompt: "Please respond to the GitHub issue or pull request comment."
           timeout_minutes: "60"
           use_vertex: "true"
           model: "claude-opus-4-1@20250805"
