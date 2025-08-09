@@ -13,10 +13,11 @@
     "preview": "vite preview",
     "electron": "electron .",
     "electron:dev": "node scripts/dev.js",
-    "dist": "vite build && electron-builder",
-    "dist:mac": "vite build && electron-builder --mac",
-    "dist:win": "vite build && electron-builder --win",
-    "dist:linux": "vite build && electron-builder --linux",
+    "prebuild:icon": "node scripts/prepare-icons.js",
+    "dist": "npm run prebuild:icon && vite build && electron-builder",
+    "dist:mac": "npm run prebuild:icon && vite build && electron-builder --mac",
+    "dist:win": "npm run prebuild:icon && vite build && electron-builder --win",
+    "dist:linux": "npm run prebuild:icon && vite build && electron-builder --linux",
     "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
@@ -90,7 +91,7 @@
       "output": "dist",
       "buildResources": "build"
     },
-    "icon": "public/app-iconpng.png",
+    "icon": "build/icon",
     "files": [
       "dist/**/*",
       "dist-electron/**/*",
