@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ChevronDown, Hash, Lock, Search, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -29,8 +29,10 @@ export function ChannelSelector({
   const [open, setOpen] = useState(false)
   const [channels, setChannels] = useState<SlackChannel[]>([])
   const [loading, setLoading] = useState(false)
+  const [backgroundLoading, setBackgroundLoading] = useState(false)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
+  const backgroundFetchRef = useRef<Promise<void> | null>(null)
 
   const selectedChannel = useMemo(() => 
     channels.find(channel => channel.id === value),
@@ -47,31 +49,64 @@ export function ChannelSelector({
     )
   }, [channels, search])
 
-  const fetchChannels = async () => {
-    if (!token || loading) return
+  const fetchChannels = async (showLoading = true) => {
+    if (!token) return
     
-    setLoading(true)
+    // If already loading in background, wait for it
+    if (backgroundFetchRef.current) {
+      await backgroundFetchRef.current
+      return
+    }
+    
+    if (showLoading) {
+      setLoading(true)
+    } else {
+      setBackgroundLoading(true)
+    }
     setError('')
     
-    try {
-      const result = await window.electronAPI.getChannels(token)
-      if (result.success && result.channels) {
-        setChannels(result.channels.sort((a, b) => a.name.localeCompare(b.name)))
-      } else {
-        setError(result.error || t('channels.fetchError'))
+    const fetchPromise = (async () => {
+      try {
+        const result = await window.electronAPI.getChannels(token)
+        if (result.success && result.channels) {
+          setChannels(result.channels.sort((a, b) => a.name.localeCompare(b.name)))
+        } else {
+          setError(result.error || t('channels.fetchError'))
+        }
+      } catch (err) {
+        setError(t('channels.fetchError'))
+      } finally {
+        if (showLoading) {
+          setLoading(false)
+        } else {
+          setBackgroundLoading(false)
+        }
+        backgroundFetchRef.current = null
       }
-    } catch (err) {
-      setError(t('channels.fetchError'))
-    } finally {
-      setLoading(false)
-    }
+    })()
+    
+    backgroundFetchRef.current = fetchPromise
+    return fetchPromise
   }
 
   useEffect(() => {
-    if (token && open && channels.length === 0) {
+    if (token && open) {
       fetchChannels()
     }
   }, [token, open])
+
+  // Clear channels and selected value when token changes, then start background fetch
+  useEffect(() => {
+    setChannels([])
+    setError('')
+    setBackgroundLoading(false)
+    onValueChange('')
+    
+    // Start background fetch if token exists
+    if (token) {
+      fetchChannels(false) // Don't show loading indicator for background fetch
+    }
+  }, [token])
 
   const handleSelect = (channelId: string) => {
     onValueChange(channelId)
@@ -112,7 +147,7 @@ export function ChannelSelector({
             />
           </div>
           <div className="max-h-[300px] overflow-y-auto">
-            {loading ? (
+            {(loading || backgroundLoading) ? (
               <div className="flex items-center justify-center p-6">
                 <Loader2 className="h-4 w-4 animate-spin mr-2" />
                 <span className="text-sm text-muted-foreground">{t('channels.loading')}</span>
@@ -123,7 +158,7 @@ export function ChannelSelector({
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={fetchChannels}
+                  onClick={() => fetchChannels(true)}
                   className="mt-2"
                 >
                   {t('channels.retry')}
@@ -131,7 +166,7 @@ export function ChannelSelector({
               </div>
             ) : filteredChannels.length === 0 ? (
               <div className="p-6 text-center text-sm text-muted-foreground">
-                {t('channels.noChannels')}
+                {!token ? t('channels.selectTokenFirst') : t('channels.noChannels')}
               </div>
             ) : (
               <div className="p-1">

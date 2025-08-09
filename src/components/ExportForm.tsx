@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Calendar, FileText, Loader2, ChevronDown, ChevronUp, Eye, EyeOff, Trash2, CheckCircle, XCircle } from 'lucide-react'
+import {
+  Calendar,
+  FileText,
+  Loader2,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -11,23 +17,16 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { SlackManifestDialog } from './SlackManifestDialog'
+} from "@/components/ui/select";
 import { ChannelSelector } from './ChannelSelector'
+import { SlackTokenSelector } from "./SlackTokenSelector";
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { ProgressUpdate, LogEntry } from '@/types/electron'
 
 export function ExportForm() {
   const { t } = useTranslation()
   const [token, setToken] = useState('')
-  const [hasStoredToken, setHasStoredToken] = useState(false)
-  const [showToken, setShowToken] = useState(false)
-  const [tokenValidation, setTokenValidation] = useState<{
-    status: 'idle' | 'validating' | 'valid' | 'invalid'
-    user?: string
-    team?: string
-    error?: string
-  }>({ status: 'idle' })
+  const [isTokenValid, setIsTokenValid] = useState(false);
   const [channelId, setChannelId] = useState('')
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0])
@@ -50,93 +49,21 @@ export function ExportForm() {
       setLogs(prev => [...prev, { ...logEntry, timestamp: new Date(logEntry.timestamp) }])
     })
 
-    // Load stored token on component mount
-    loadStoredToken()
-
     return () => {
       unsubscribeProgress()
       unsubscribeLog()
     }
   }, [])
 
-  const loadStoredToken = async () => {
-    try {
-      const result = await window.electronAPI.getSlackToken()
-      if (result.success && result.token) {
-        setToken(result.token)
-        setHasStoredToken(true)
-        // Validate the stored token
-        await validateToken(result.token)
-      } else {
-        setHasStoredToken(false)
-      }
-    } catch (error) {
-      console.error('Error loading stored token:', error)
-      setHasStoredToken(false)
-    }
-  }
+  const handleTokenChange = (newToken: string) => {
+    setToken(newToken);
+    // Clear channel selection when token changes
+    setChannelId('');
+  };
 
-  const validateToken = async (tokenToValidate: string) => {
-    if (!tokenToValidate) {
-      setTokenValidation({ status: 'idle' })
-      return
-    }
-
-    setTokenValidation({ status: 'validating' })
-    
-    try {
-      const result = await window.electronAPI.validateSlackToken(tokenToValidate)
-      if (result.success) {
-        setTokenValidation({
-          status: 'valid',
-          user: result.user,
-          team: result.team
-        })
-      } else {
-        setTokenValidation({
-          status: 'invalid',
-          error: result.error
-        })
-      }
-    } catch (error) {
-      setTokenValidation({
-        status: 'invalid',
-        error: 'Validation failed'
-      })
-    }
-  }
-
-  const handleTokenChange = async (newToken: string) => {
-    setToken(newToken)
-    
-    // Clear previous validation
-    setTokenValidation({ status: 'idle' })
-    
-    if (newToken) {
-      try {
-        await window.electronAPI.storeSlackToken(newToken)
-        setHasStoredToken(true)
-        
-        // Debounced validation
-        setTimeout(() => validateToken(newToken), 1000)
-      } catch (error) {
-        console.error('Error storing token:', error)
-      }
-    } else {
-      setHasStoredToken(false)
-    }
-  }
-
-  const handleClearToken = async () => {
-    try {
-      await window.electronAPI.clearSlackToken()
-      setToken('')
-      setHasStoredToken(false)
-      setTokenValidation({ status: 'idle' })
-    } catch (error) {
-      console.error('Error clearing token:', error)
-    }
-  }
+  const handleTokenValidated = (isValid: boolean) => {
+    setIsTokenValid(isValid);
+  };
 
   const handleChooseFile = async () => {
     const defaultName = `slack-export-${channelId}-${startDate}.${format}`
@@ -199,98 +126,28 @@ export function ExportForm() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="token">{t('export.token')}</Label>
-          <div className="flex items-center gap-2">
-            {tokenValidation.status === 'validating' && (
-              <div className="flex items-center gap-1">
-                <Loader2 className="h-3 w-3 animate-spin" />
-                <span className="text-xs text-muted-foreground">{t('validation.validating')}</span>
-              </div>
-            )}
-            {tokenValidation.status === 'valid' && (
-              <div className="flex items-center gap-1">
-                <CheckCircle className="h-3 w-3 text-green-600" />
-                <span className="text-xs text-green-600">{t('validation.valid')}</span>
-              </div>
-            )}
-            {tokenValidation.status === 'invalid' && (
-              <div className="flex items-center gap-1">
-                <XCircle className="h-3 w-3 text-red-600" />
-                <span className="text-xs text-red-600">{t('validation.invalid')}</span>
-              </div>
-            )}
-            {hasStoredToken && (
-              <div className="flex items-center gap-2">
-                <span className="text-xs text-green-600">{t('validation.storedSecurely')}</span>
-                <Button
-                  onClick={handleClearToken}
-                  variant="ghost"
-                  size="sm"
-                  className="h-6 w-6 p-0"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </Button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="relative">
-          <Input
-            id="token"
-            type={showToken ? "text" : "password"}
-            placeholder={t('export.tokenPlaceholder')}
-            value={token}
-            onChange={(e) => handleTokenChange(e.target.value)}
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="absolute right-0 top-0 h-full px-3"
-            onClick={() => setShowToken(!showToken)}
-          >
-            {showToken ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-          </Button>
-        </div>
-        <div className="flex justify-between items-start">
-          <SlackManifestDialog />
-          <div className="flex flex-col items-end gap-1">
-            {tokenValidation.status === 'valid' && tokenValidation.user && tokenValidation.team && (
-              <div className="text-xs text-green-600">
-                {t('validation.connectedAs', { user: tokenValidation.user, team: tokenValidation.team })}
-              </div>
-            )}
-            {tokenValidation.status === 'invalid' && tokenValidation.error && (
-              <div className="text-xs text-red-600">
-                {tokenValidation.error}
-              </div>
-            )}
-            {token && (
-              <span className="text-xs text-muted-foreground">
-                {t('validation.tokenStoredInfo')}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+      <SlackTokenSelector
+        onValueChange={handleTokenChange}
+        onTokenValidated={handleTokenValidated}
+      />
 
       <div className="space-y-2">
-        <Label htmlFor="channelId">{t('export.channelId')}</Label>
+        <Label htmlFor="channelId">{t("export.channelId")}</Label>
         <ChannelSelector
           token={token}
           value={channelId}
           onValueChange={setChannelId}
-          placeholder={t('export.channelIdPlaceholder')}
-          disabled={tokenValidation.status !== 'valid'}
+          placeholder={t("export.channelIdPlaceholder")}
+          disabled={!isTokenValid}
         />
-        <p className="text-sm text-muted-foreground">{t('export.channelIdHelp')}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("export.channelIdHelp")}
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="startDate">{t('export.startDate')}</Label>
+          <Label htmlFor="startDate">{t("export.startDate")}</Label>
           <div className="relative">
             <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -304,7 +161,7 @@ export function ExportForm() {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="endDate">{t('export.endDate')}</Label>
+          <Label htmlFor="endDate">{t("export.endDate")}</Label>
           <div className="relative">
             <Calendar className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
             <Input
@@ -319,8 +176,11 @@ export function ExportForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="format">{t('export.format')}</Label>
-        <Select value={format} onValueChange={(value: 'docx' | 'md') => setFormat(value)}>
+        <Label htmlFor="format">{t("export.format")}</Label>
+        <Select
+          value={format}
+          onValueChange={(value: "docx" | "md") => setFormat(value)}
+        >
           <SelectTrigger id="format">
             <SelectValue />
           </SelectTrigger>
@@ -328,13 +188,13 @@ export function ExportForm() {
             <SelectItem value="docx">
               <div className="flex items-center">
                 <FileText className="w-4 h-4 mr-2" />
-                {t('export.formatDocx')}
+                {t("export.formatDocx")}
               </div>
             </SelectItem>
             <SelectItem value="md">
               <div className="flex items-center">
                 <FileText className="w-4 h-4 mr-2" />
-                {t('export.formatMd')}
+                {t("export.formatMd")}
               </div>
             </SelectItem>
           </SelectContent>
@@ -342,7 +202,7 @@ export function ExportForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="outputPath">{t('export.outputPath')}</Label>
+        <Label htmlFor="outputPath">{t("export.outputPath")}</Label>
         <div className="flex gap-2">
           <Input
             id="outputPath"
@@ -351,13 +211,13 @@ export function ExportForm() {
             readOnly
           />
           <Button onClick={handleChooseFile} variant="outline">
-            {t('export.chooseFile')}
+            {t("export.chooseFile")}
           </Button>
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="concurrency">{t('export.concurrency')}</Label>
+        <Label htmlFor="concurrency">{t("export.concurrency")}</Label>
         <Input
           id="concurrency"
           type="number"
@@ -366,7 +226,9 @@ export function ExportForm() {
           value={concurrency}
           onChange={(e) => setConcurrency(parseInt(e.target.value) || 4)}
         />
-        <p className="text-sm text-muted-foreground">{t('export.concurrencyHelp')}</p>
+        <p className="text-sm text-muted-foreground">
+          {t("export.concurrencyHelp")}
+        </p>
       </div>
 
       {error && (
@@ -382,11 +244,12 @@ export function ExportForm() {
             <span className="text-muted-foreground">{progress.progress}%</span>
           </div>
           <Progress value={progress.progress} className="w-full" />
-          
-          {progress.stage === 'downloading' && progress.details && (
+
+          {progress.stage === "downloading" && progress.details && (
             <div className="space-y-1">
               <div className="text-xs text-muted-foreground">
-                Files: {progress.details.filesCompleted || 0} / {progress.details.totalFiles || 0}
+                Files: {progress.details.filesCompleted || 0} /{" "}
+                {progress.details.totalFiles || 0}
               </div>
               {progress.details.currentFile && (
                 <div className="text-xs text-muted-foreground truncate">
@@ -395,13 +258,15 @@ export function ExportForm() {
               )}
             </div>
           )}
-          
-          {progress.current !== undefined && progress.total !== undefined && progress.stage !== 'downloading' && (
-            <div className="text-xs text-muted-foreground">
-              {progress.current} / {progress.total}
-            </div>
-          )}
-          
+
+          {progress.current !== undefined &&
+            progress.total !== undefined &&
+            progress.stage !== "downloading" && (
+              <div className="text-xs text-muted-foreground">
+                {progress.current} / {progress.total}
+              </div>
+            )}
+
           {logs.length > 0 && (
             <div className="border rounded-lg">
               <Button
@@ -411,9 +276,13 @@ export function ExportForm() {
                 className="w-full justify-between p-3 text-xs"
               >
                 <span>Detailed Logs ({logs.length})</span>
-                {showLogs ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+                {showLogs ? (
+                  <ChevronUp className="h-3 w-3" />
+                ) : (
+                  <ChevronDown className="h-3 w-3" />
+                )}
               </Button>
-              
+
               {showLogs && (
                 <div className="border-t max-h-40 overflow-y-auto p-3 space-y-1">
                   {logs.map((log, index) => (
@@ -421,12 +290,15 @@ export function ExportForm() {
                       <span className="text-muted-foreground">
                         {log.timestamp.toLocaleTimeString()}
                       </span>
-                      <span 
+                      <span
                         className={`ml-2 ${
-                          log.level === 'error' ? 'text-red-500' :
-                          log.level === 'warning' ? 'text-yellow-500' :
-                          log.level === 'success' ? 'text-green-500' :
-                          'text-muted-foreground'
+                          log.level === "error"
+                            ? "text-red-500"
+                            : log.level === "warning"
+                            ? "text-yellow-500"
+                            : log.level === "success"
+                            ? "text-green-500"
+                            : "text-muted-foreground"
                         }`}
                       >
                         {log.message}
@@ -443,11 +315,14 @@ export function ExportForm() {
       {success && (
         <Alert>
           <AlertDescription>
-            {t('results.success')}
+            {t("results.success")}
             <br />
-            {t('results.exported', { count: success.messageCount, path: success.filePath })}
+            {t("results.exported", {
+              count: success.messageCount,
+              path: success.filePath,
+            })}
             <br />
-            {t('results.channel', { name: success.channelName })}
+            {t("results.channel", { name: success.channelName })}
           </AlertDescription>
         </Alert>
       )}
@@ -461,12 +336,12 @@ export function ExportForm() {
         {isExporting ? (
           <>
             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            {t('export.exporting')}
+            {t("export.exporting")}
           </>
         ) : (
-          t('export.exportButton')
+          t("export.exportButton")
         )}
       </Button>
     </div>
-  )
+  );
 }

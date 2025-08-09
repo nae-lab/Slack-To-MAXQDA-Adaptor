@@ -4,6 +4,7 @@
     "skipLibCheck": true,
     "module": "commonjs",
     "moduleResolution": "node",
+    "allowImportingTsExtensions": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "strict": true,

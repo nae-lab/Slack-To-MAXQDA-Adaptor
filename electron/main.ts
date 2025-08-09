@@ -2,7 +2,9 @@ import { app, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { SlackMaxqdaAdapter } from 'slack-maxqda-adapter'
 import { WebClient } from '@slack/web-api'
-import { secureStorage } from './storage'
+import { secureStorage } from "./storage.ts";
+import type { SlackTokenInfo } from "./storage.ts";
+import { createHash } from "crypto";
 
 let mainWindow: BrowserWindow | null = null
 
@@ -43,200 +45,312 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.handle('export-slack', async (event, options) => {
+ipcMain.handle("export-slack", async (event, options) => {
   try {
     const adapter = new SlackMaxqdaAdapter({
       token: options.token,
       concurrency: options.concurrency || 4,
       onProgress: (progress) => {
         // Send progress update to renderer
-        event.sender.send('export-progress', progress)
+        event.sender.send("export-progress", progress);
       },
       onLog: (logEntry) => {
         // Send log entry to renderer
-        event.sender.send('export-log', logEntry)
-      }
-    })
-    
+        event.sender.send("export-log", logEntry);
+      },
+    });
+
     const result = await adapter.export({
       channelId: options.channelId,
       startDate: options.startDate,
       endDate: options.endDate || options.startDate,
       format: options.format,
-      outputPath: options.outputPath
-    })
-    
-    return { success: true, result }
-  } catch (error) {
-    console.error('Export error:', error)
-    return { success: false, error: error.message }
-  }
-})
+      outputPath: options.outputPath,
+    });
 
-ipcMain.handle('export-multiple', async (_, { token, exports, concurrency }) => {
-  try {
-    const adapter = new SlackMaxqdaAdapter({
+    return { success: true, result };
+  } catch (error: unknown) {
+    console.error("Export error:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle(
+  "export-multiple",
+  async (
+    _: any,
+    {
       token,
-      concurrency: concurrency || 4
-    })
-    
-    const exportOptions = exports.map(exportConfig => ({
-      channelId: exportConfig.channelId,
-      startDate: exportConfig.startDate,
-      endDate: exportConfig.endDate || exportConfig.startDate,
-      format: exportConfig.format,
-      outputPath: exportConfig.outputPath
-    }))
-    
-    const results = await adapter.exportMultiple(exportOptions)
-    
-    return { success: true, results }
-  } catch (error) {
-    console.error('Export error:', error)
-    return { success: false, error: error.message }
-  }
-})
-
-ipcMain.handle('get-channel-name', async (_, { token, channelId }) => {
-  try {
-    const client = new WebClient(token)
-    const result = await client.conversations.info({
-      channel: channelId
-    })
-    
-    if (result.ok && result.channel) {
-      return { success: true, channelName: result.channel.name }
+      exports,
+      concurrency,
+    }: {
+      token: string;
+      exports: Array<{
+        channelId: string;
+        startDate: string;
+        endDate?: string;
+        format: "docx" | "md";
+        outputPath: string;
+      }>;
+      concurrency?: number;
     }
-    
-    return { success: false, error: 'Channel not found' }
-  } catch (error) {
-    console.error('Get channel name error:', error)
-    return { success: false, error: error.message }
-  }
-})
+  ) => {
+    try {
+      const adapter = new SlackMaxqdaAdapter({
+        token,
+        concurrency: concurrency || 4,
+      });
 
-ipcMain.handle('choose-directory', async () => {
+      const exportOptions = exports.map((exportConfig) => ({
+        channelId: exportConfig.channelId,
+        startDate: exportConfig.startDate,
+        endDate: exportConfig.endDate || exportConfig.startDate,
+        format: exportConfig.format,
+        outputPath: exportConfig.outputPath,
+      }));
+
+      const results = await adapter.exportMultiple(exportOptions);
+
+      return { success: true, results };
+    } catch (error: unknown) {
+      console.error("Export error:", error);
+      return { success: false, error: (error as Error).message };
+    }
+  }
+);
+
+ipcMain.handle("get-channel-name", async (_, { token, channelId }) => {
+  try {
+    const client = new WebClient(token);
+    const result = await client.conversations.info({
+      channel: channelId,
+    });
+
+    if (result.ok && result.channel) {
+      return { success: true, channelName: result.channel.name };
+    }
+
+    return { success: false, error: "Channel not found" };
+  } catch (error: unknown) {
+    console.error("Get channel name error:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("choose-directory", async () => {
   const result = await dialog.showOpenDialog(mainWindow!, {
-    properties: ['openDirectory', 'createDirectory']
-  })
-  
-  if (!result.canceled && result.filePaths.length > 0) {
-    return result.filePaths[0]
-  }
-  return null
-})
+    properties: ["openDirectory", "createDirectory"],
+  });
 
-ipcMain.handle('save-file-dialog', async (_, defaultFileName: string) => {
+  if (!result.canceled && result.filePaths.length > 0) {
+    return result.filePaths[0];
+  }
+  return null;
+});
+
+ipcMain.handle("save-file-dialog", async (_, defaultFileName: string) => {
   const result = await dialog.showSaveDialog(mainWindow!, {
     defaultPath: defaultFileName,
     filters: [
-      { name: 'Word Documents', extensions: ['docx'] },
-      { name: 'Markdown Files', extensions: ['md'] }
-    ]
-  })
-  
+      { name: "Word Documents", extensions: ["docx"] },
+      { name: "Markdown Files", extensions: ["md"] },
+    ],
+  });
+
   if (!result.canceled) {
-    return result.filePath
+    return result.filePath;
   }
-  return null
-})
+  return null;
+});
 
 // Secure token storage handlers
-ipcMain.handle('store-slack-token', async (_, token: string) => {
+ipcMain.handle("store-slack-token", async (_, token: string) => {
   try {
-    secureStorage.setSlackToken(token)
-    return { success: true }
-  } catch (error) {
-    console.error('Error storing token:', error)
-    return { success: false, error: error.message }
+    secureStorage.setSlackToken(token);
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Error storing token:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
 
-ipcMain.handle('get-slack-token', async () => {
+ipcMain.handle("get-slack-token", async () => {
   try {
-    const token = secureStorage.getSlackToken()
-    return { success: true, token }
-  } catch (error) {
-    console.error('Error retrieving token:', error)
-    return { success: false, error: error.message }
+    const token = secureStorage.getSlackToken();
+    return { success: true, token };
+  } catch (error: unknown) {
+    console.error("Error retrieving token:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
 
-ipcMain.handle('clear-slack-token', async () => {
+ipcMain.handle("clear-slack-token", async () => {
   try {
-    secureStorage.clearSlackToken()
-    return { success: true }
-  } catch (error) {
-    console.error('Error clearing token:', error)
-    return { success: false, error: error.message }
+    secureStorage.clearSlackToken();
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Error clearing token:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
 
-ipcMain.handle('has-slack-token', async () => {
+ipcMain.handle("has-slack-token", async () => {
   try {
-    const hasToken = secureStorage.hasSlackToken()
-    return { success: true, hasToken }
-  } catch (error) {
-    console.error('Error checking token:', error)
-    return { success: false, error: error.message }
+    const hasToken = secureStorage.hasSlackToken();
+    return { success: true, hasToken };
+  } catch (error: unknown) {
+    console.error("Error checking token:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
 
-ipcMain.handle('validate-slack-token', async (_, token: string) => {
+ipcMain.handle("validate-slack-token", async (_, token: string) => {
   try {
-    const client = new WebClient(token)
-    const result = await client.auth.test()
-    
+    const client = new WebClient(token);
+    const result = await client.auth.test();
+
     if (result.ok) {
-      return { 
-        success: true, 
+      return {
+        success: true,
         user: result.user,
         team: result.team,
         teamId: result.team_id,
-        userId: result.user_id
-      }
+        userId: result.user_id,
+      };
     } else {
-      return { success: false, error: 'Invalid token' }
+      return { success: false, error: "Invalid token" };
     }
-  } catch (error) {
-    console.error('Token validation error:', error)
-    return { success: false, error: error.message }
+  } catch (error: unknown) {
+    console.error("Token validation error:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
 
-ipcMain.handle('get-channels', async (_, token: string) => {
+// Multi-token management handlers
+ipcMain.handle("add-slack-token", async (_, token: string) => {
   try {
-    const client = new WebClient(token)
-    const channels = []
-    let cursor = undefined
-    
+    // First validate the token to get user/team info
+    const client = new WebClient(token);
+    const result = await client.auth.test();
+
+    if (!result.ok) {
+      return { success: false, error: "Invalid token" };
+    }
+
+    // Create a unique ID for this token based on team and user
+    const tokenId = createHash("sha256")
+      .update(`${result.team_id}-${result.user_id}`)
+      .digest("hex")
+      .substring(0, 16);
+
+    const tokenInfo: SlackTokenInfo = {
+      id: tokenId,
+      token,
+      teamName: result.team || "Unknown Team",
+      userName: result.user || "Unknown User",
+      teamId: result.team_id || "",
+      userId: result.user_id || "",
+      createdAt: new Date(),
+    };
+
+    secureStorage.addSlackToken(tokenInfo);
+
+    // If this is the first token, select it automatically
+    const tokens = secureStorage.getSlackTokens();
+    if (tokens.length === 1) {
+      secureStorage.setSelectedTokenId(tokenId);
+    }
+
+    return { success: true, tokenInfo };
+  } catch (error: unknown) {
+    console.error("Error adding token:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("get-slack-tokens", async () => {
+  try {
+    const tokens = secureStorage.getSlackTokens();
+    const selectedTokenId = secureStorage.getSelectedTokenId();
+    return { success: true, tokens, selectedTokenId };
+  } catch (error: unknown) {
+    console.error("Error retrieving tokens:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("select-slack-token", async (_, tokenId: string) => {
+  try {
+    secureStorage.setSelectedTokenId(tokenId);
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Error selecting token:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("remove-slack-token", async (_, tokenId: string) => {
+  try {
+    secureStorage.removeSlackToken(tokenId);
+    return { success: true };
+  } catch (error: unknown) {
+    console.error("Error removing token:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("get-selected-token", async () => {
+  try {
+    const selectedToken = secureStorage.getSelectedToken();
+    return { success: true, token: selectedToken?.token || null };
+  } catch (error: unknown) {
+    console.error("Error getting selected token:", error);
+    return { success: false, error: (error as Error).message };
+  }
+});
+
+ipcMain.handle("get-channels", async (_, token: string) => {
+  try {
+    const client = new WebClient(token);
+    const channels: Array<{
+      id?: string;
+      name?: string;
+      isPrivate?: boolean;
+      memberCount?: number;
+      purpose: string;
+      topic: string;
+    }> = [];
+    let cursor: string | undefined = undefined;
+
     // Fetch all public channels
     do {
       const result = await client.conversations.list({
-        types: 'public_channel,private_channel',
+        types: "public_channel,private_channel",
         exclude_archived: true,
         limit: 200,
-        cursor
-      })
-      
+        cursor,
+      });
+
       if (result.ok && result.channels) {
-        channels.push(...result.channels.map(channel => ({
-          id: channel.id,
-          name: channel.name,
-          isPrivate: channel.is_private,
-          memberCount: channel.num_members,
-          purpose: channel.purpose?.value || '',
-          topic: channel.topic?.value || ''
-        })))
-        cursor = result.response_metadata?.next_cursor
+        channels.push(
+          ...result.channels.map((channel: any) => ({
+            id: channel.id as string | undefined,
+            name: channel.name as string | undefined,
+            isPrivate: channel.is_private as boolean | undefined,
+            memberCount: channel.num_members as number | undefined,
+            purpose: (channel.purpose?.value as string | undefined) || "",
+            topic: (channel.topic?.value as string | undefined) || "",
+          }))
+        );
+        cursor = result.response_metadata?.next_cursor as string | undefined;
       } else {
-        break
+        break;
       }
-    } while (cursor)
-    
-    return { success: true, channels }
-  } catch (error) {
-    console.error('Get channels error:', error)
-    return { success: false, error: error.message }
+    } while (cursor);
+
+    return { success: true, channels };
+  } catch (error: unknown) {
+    console.error("Get channels error:", error);
+    return { success: false, error: (error as Error).message };
   }
-})
+});
