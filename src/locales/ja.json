@@ -28,6 +28,14 @@
     "addChannel": "チャンネルを追加",
     "removeChannel": "削除"
   },
+  "tokenSelector": {
+    "noTokens": "トークンがありません",
+    "selectToken": "トークンを選択",
+    "addToken": "トークンを追加",
+    "addNewToken": "新しいトークンを追加",
+    "addTokenDescription": "Slack APIトークンを追加してください。組織とユーザー情報が自動的に取得されます。",
+    "adding": "追加中..."
+  },
   "manifest": {
     "title": "Slackアプリ設定",
     "description": "以下のマニフェストでSlackアプリを作成してください",
@@ -46,6 +54,7 @@
     "selectPlaceholder": "チャンネルを選択...",
     "loading": "チャンネル読み込み中...",
     "noChannels": "チャンネルが見つかりません。",
+    "selectTokenFirst": "まずトークンを選択してください。",
     "retry": "再試行",
     "fetchError": "チャンネルの取得に失敗しました",
     "members": "{{count}}人のメンバー"
@@ -57,6 +66,13 @@
     "storedSecurely": "安全に保存済み",
     "connectedAs": "{{user}} @ {{team}} として接続中",
     "tokenStoredInfo": "トークンはこのデバイスに安全に保存されています"
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "save": "保存",
+    "delete": "削除",
+    "edit": "編集",
+    "ok": "OK"
   },
   "errors": {
     "tokenRequired": "Slack APIトークンが必要です",

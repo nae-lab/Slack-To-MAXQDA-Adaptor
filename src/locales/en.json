@@ -28,6 +28,14 @@
     "addChannel": "Add Channel",
     "removeChannel": "Remove"
   },
+  "tokenSelector": {
+    "noTokens": "No tokens available",
+    "selectToken": "Select token",
+    "addToken": "Add Token",
+    "addNewToken": "Add New Token",
+    "addTokenDescription": "Add a Slack API token. Organization and user information will be automatically retrieved.",
+    "adding": "Adding..."
+  },
   "manifest": {
     "title": "Slack App Configuration",
     "description": "Create a Slack app with the following manifest to get started",
@@ -46,6 +54,7 @@
     "selectPlaceholder": "Select a channel...",
     "loading": "Loading channels...",
     "noChannels": "No channels found.",
+    "selectTokenFirst": "Please select a token first.",
     "retry": "Retry",
     "fetchError": "Failed to fetch channels",
     "members": "{{count}} members"
@@ -57,6 +66,13 @@
     "storedSecurely": "Stored securely",
     "connectedAs": "Connected as {{user}} @ {{team}}",
     "tokenStoredInfo": "Token stored securely on this device"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "ok": "OK"
   },
   "errors": {
     "tokenRequired": "Slack API token is required",
