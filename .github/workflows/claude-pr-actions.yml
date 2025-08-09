@@ -47,6 +47,7 @@ jobs:
       - name: Run Claude PR Action
         uses: anthropics/claude-code-action@beta
         with:
+          github_token: ${{ steps.app-token.outputs.token }}
           timeout_minutes: "60"
           use_vertex: "true"
           model: "claude-opus-4-1@20250805"
