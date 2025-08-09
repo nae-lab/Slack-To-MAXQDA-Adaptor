@@ -1,7 +1,7 @@
 name: Claude PR Assistant
 
 permissions:
-  contents: read
+  contents: write
   pull-requests: write
   issues: write
   id-token: write
@@ -28,7 +28,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
 
       - name: Generate GitHub App token
         id: app-token
@@ -61,3 +61,4 @@ jobs:
           ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
           CLOUD_ML_REGION: us-east5
           VERTEX_REGION_CLAUDE_OPUS_4_1: us-east5
+          VERTEX_REGION: us-east5 # Correct environment variable for region
