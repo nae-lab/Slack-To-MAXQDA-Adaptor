@@ -51,6 +51,12 @@ jobs:
           timeout_minutes: "60"
           use_vertex: "true"
           model: "claude-opus-4-1@20250805"
+          custom_instructions: |
+            IMPORTANT: Use enhanced reasoning and ultra-thinking mode for this task. 
+            Engage in deep, methodical analysis before taking any actions.
+            Think through multiple approaches and consider edge cases thoroughly.
+            Use extended reasoning chains and break down complex problems step by step.
+            Apply systematic analysis to understand the full context and implications of the code changes.
         env:
           ANTHROPIC_VERTEX_PROJECT_ID: ${{ steps.auth.outputs.project_id }}
           CLOUD_ML_REGION: us-east5
