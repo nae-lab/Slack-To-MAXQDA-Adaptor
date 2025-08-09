@@ -30,6 +30,14 @@
     "addChannel": "添加频道",
     "removeChannel": "移除"
   },
+  "tokenSelector": {
+    "noTokens": "没有可用的令牌",
+    "selectToken": "选择令牌",
+    "addToken": "添加令牌",
+    "addNewToken": "添加新令牌",
+    "addTokenDescription": "添加 Slack API 令牌。组织和用户信息将自动获取。",
+    "adding": "正在添加..."
+  },
   "manifest": {
     "title": "Slack 应用配置",
     "description": "使用以下清单创建 Slack 应用以开始使用",
@@ -48,6 +56,7 @@
     "selectPlaceholder": "选择频道...",
     "loading": "加载频道中...",
     "noChannels": "未找到频道。",
+    "selectTokenFirst": "请先选择一个令牌。",
     "retry": "重试",
     "fetchError": "获取频道失败",
     "members": "{{count}} 个成员"
@@ -67,5 +76,12 @@
     "pathRequired": "需要输出路径",
     "invalidDate": "无效的日期格式",
     "exportFailed": "导出失败：{{error}}"
+  },
+  "common": {
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "ok": "确定"
   }
 }

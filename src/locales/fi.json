@@ -30,6 +30,14 @@
     "addChannel": "Lisää Kanava",
     "removeChannel": "Poista"
   },
+  "tokenSelector": {
+    "noTokens": "Ei tokeneja saatavilla",
+    "selectToken": "Valitse token",
+    "addToken": "Lisää Token",
+    "addNewToken": "Lisää Uusi Token",
+    "addTokenDescription": "Lisää Slack API token. Organisaation ja käyttäjän tiedot haetaan automaattisesti.",
+    "adding": "Lisätään..."
+  },
   "manifest": {
     "title": "Slack Sovelluksen Konfiguraatio",
     "description": "Luo Slack sovellus seuraavalla manifestilla aloittaaksesi",
@@ -48,6 +56,7 @@
     "selectPlaceholder": "Valitse kanava...",
     "loading": "Ladataan kanavia...",
     "noChannels": "Kanavia ei löytynyt.",
+    "selectTokenFirst": "Valitse ensin token.",
     "retry": "Yritä Uudelleen",
     "fetchError": "Kanavien haku epäonnistui",
     "members": "{{count}} jäsentä"
@@ -67,5 +76,12 @@
     "pathRequired": "Tulostuspolku vaaditaan",
     "invalidDate": "Virheellinen päivämäärän muoto",
     "exportFailed": "Vienti epäonnistui: {{error}}"
+  },
+  "common": {
+    "cancel": "Peruuta",
+    "save": "Tallenna",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "ok": "OK"
   }
 }

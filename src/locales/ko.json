@@ -30,6 +30,14 @@
     "addChannel": "채널 추가",
     "removeChannel": "제거"
   },
+  "tokenSelector": {
+    "noTokens": "사용 가능한 토큰이 없습니다",
+    "selectToken": "토큰 선택",
+    "addToken": "토큰 추가",
+    "addNewToken": "새 토큰 추가",
+    "addTokenDescription": "Slack API 토큰을 추가하세요. 조직 및 사용자 정보가 자동으로 검색됩니다.",
+    "adding": "추가 중..."
+  },
   "manifest": {
     "title": "Slack 앱 구성",
     "description": "시작하려면 다음 매니페스트로 Slack 앱을 만드세요",
@@ -48,6 +56,7 @@
     "selectPlaceholder": "채널 선택...",
     "loading": "채널 로딩 중...",
     "noChannels": "채널을 찾을 수 없습니다.",
+    "selectTokenFirst": "먼저 토큰을 선택하세요.",
     "retry": "다시 시도",
     "fetchError": "채널 가져오기 실패",
     "members": "{{count}}명의 멤버"
@@ -67,5 +76,12 @@
     "pathRequired": "출력 경로가 필요합니다",
     "invalidDate": "잘못된 날짜 형식",
     "exportFailed": "내보내기 실패: {{error}}"
+  },
+  "common": {
+    "cancel": "취소",
+    "save": "저장",
+    "delete": "삭제",
+    "edit": "편집",
+    "ok": "확인"
   }
 }

@@ -30,6 +30,14 @@
     "addChannel": "Kanaal Toevoegen",
     "removeChannel": "Verwijderen"
   },
+  "tokenSelector": {
+    "noTokens": "Geen tokens beschikbaar",
+    "selectToken": "Selecteer token",
+    "addToken": "Token Toevoegen",
+    "addNewToken": "Nieuwe Token Toevoegen",
+    "addTokenDescription": "Voeg een Slack API token toe. Organisatie- en gebruikersinformatie wordt automatisch opgehaald.",
+    "adding": "Toevoegen..."
+  },
   "manifest": {
     "title": "Slack App Configuratie",
     "description": "Maak een Slack app met het volgende manifest om te beginnen",
@@ -48,6 +56,7 @@
     "selectPlaceholder": "Selecteer een kanaal...",
     "loading": "Kanalen laden...",
     "noChannels": "Geen kanalen gevonden.",
+    "selectTokenFirst": "Selecteer eerst een token.",
     "retry": "Opnieuw proberen",
     "fetchError": "Fout bij ophalen kanalen",
     "members": "{{count}} leden"
@@ -67,5 +76,12 @@
     "pathRequired": "Uitvoerpad is vereist",
     "invalidDate": "Ongeldig datumformaat",
     "exportFailed": "Export mislukt: {{error}}"
+  },
+  "common": {
+    "cancel": "Annuleren",
+    "save": "Opslaan",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "ok": "OK"
   }
 }

@@ -30,6 +30,14 @@
     "addChannel": "Adicionar Canal",
     "removeChannel": "Remover"
   },
+  "tokenSelector": {
+    "noTokens": "Nenhum token disponível",
+    "selectToken": "Selecionar token",
+    "addToken": "Adicionar Token",
+    "addNewToken": "Adicionar Novo Token",
+    "addTokenDescription": "Adicionar um token da API do Slack. As informações da organização e do usuário serão obtidas automaticamente.",
+    "adding": "Adicionando..."
+  },
   "manifest": {
     "title": "Configuração do Aplicativo do Slack",
     "description": "Crie um aplicativo do Slack com o seguinte manifesto para começar",
@@ -48,6 +56,7 @@
     "selectPlaceholder": "Selecionar um canal...",
     "loading": "Carregando canais...",
     "noChannels": "Nenhum canal encontrado.",
+    "selectTokenFirst": "Por favor, selecione um token primeiro.",
     "retry": "Tentar novamente",
     "fetchError": "Falha ao buscar canais",
     "members": "{{count}} membros"
@@ -67,5 +76,12 @@
     "pathRequired": "Caminho de saída é obrigatório",
     "invalidDate": "Formato de data inválido",
     "exportFailed": "Falha na exportação: {{error}}"
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "ok": "OK"
   }
 }
