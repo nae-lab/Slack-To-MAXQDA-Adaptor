@@ -4,7 +4,7 @@ permissions:
   contents: write
   pull-requests: write
   issues: write
-  id-token: write  
+  id-token: write
 
 on:
   issue_comment:
@@ -38,12 +38,11 @@ jobs:
         with:
           workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-      
-      - uses: anthropics/claude-code-github-actions@v1
+
+      - uses: anthropics/claude-code-base-action@v0.0.55
         with:
-          trigger_phrase: "@claude"
+          prompt: "Please respond to the GitHub issue or pull request comment."
           timeout_minutes: "60"
-          github_token: ${{ steps.app-token.outputs.token }}
           use_vertex: "true"
           model: "claude-opus-4-1@20250805"
         env:
