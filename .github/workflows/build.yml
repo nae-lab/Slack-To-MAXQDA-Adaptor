@@ -39,9 +39,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        
-      - name: Prepare build resources
-        run: npm run prebuild:icon
 
       - name: Build application
         run: npm run build
