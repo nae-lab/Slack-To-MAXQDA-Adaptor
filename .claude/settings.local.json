@@ -12,7 +12,9 @@
       "Bash(find . -name \"*.json\" -exec grep -l \"sharp\" {} ;)",
       "Bash(pnpm install)",
       "Bash(git add build/app-iconpng.png)",
-      "Bash(git rm build/icon.png)"
+      "Bash(git rm build/icon.png)",
+      "WebFetch(domain:api.slack.com)",
+      "Bash(npm run typecheck)"
     ],
     "deny": []
   }
