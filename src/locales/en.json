@@ -52,14 +52,19 @@
     "channel": "Channel: {{name}}"
   },
   "channels": {
+    "inputPlaceholder": "Channel ID (C1234567890, D1234567890)",
+    "browseButton": "Browse from channel list",
     "searchPlaceholder": "Search channels...",
     "selectPlaceholder": "Select a channel...",
+    "backToInput": "Back to direct input",
     "loading": "Loading channels...",
     "noChannels": "No channels found.",
     "selectTokenFirst": "Please select a token first.",
     "retry": "Retry",
     "fetchError": "Failed to fetch channels",
-    "members": "{{count}} members"
+    "members": "{{count}} members",
+    "validate": "Validate",
+    "validating": "Validating..."
   },
   "validation": {
     "validating": "Validating...",

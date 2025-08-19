@@ -31,7 +31,15 @@ function createWindow() {
   })
 }
 
-app.whenReady().then(createWindow)
+app.whenReady().then(() => {
+  // Suppress CoreText font warnings on macOS
+  if (process.platform === 'darwin') {
+    process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = 'true'
+    app.commandLine.appendSwitch('disable-font-subpixel-positioning')
+    app.commandLine.appendSwitch('disable-features', 'VizDisplayCompositor')
+  }
+  createWindow()
+})
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -122,12 +130,82 @@ ipcMain.handle(
 ipcMain.handle("get-channel-name", async (_, { token, channelId }) => {
   try {
     const client = new WebClient(token);
+    
+    // Get current user info to exclude from DM names
+    const authResult = await client.auth.test();
+    const currentUserId = authResult.user_id;
+    
     const result = await client.conversations.info({
       channel: channelId,
     });
 
     if (result.ok && result.channel) {
-      return { success: true, channelName: result.channel.name };
+      // Check if it's a DM/MPDM first, before checking for regular channel name
+      const isIM = !!result.channel.is_im;
+      const isMPIM = !!result.channel.is_mpim;
+      
+      // For DMs/MPDMs: Always process as DM regardless of name
+      const isDM = isIM || isMPIM || (result.channel.name && result.channel.name.startsWith('mpdm-'));
+      
+      if (!isDM && result.channel.name) {
+        // For regular channels (not DM/MPDM), use the name
+        return { success: true, channelName: result.channel.name };
+      }
+      
+      if (isDM) {
+        try {
+          const membersResult = await client.conversations.members({
+            channel: channelId,
+          });
+          
+          if (membersResult.ok && membersResult.members) {
+            // Get user info for members (excluding bots and current user)
+            const otherMembers = membersResult.members
+              .filter(member => !member.startsWith('B') && member !== currentUserId);
+            
+            if (otherMembers.length === 0) {
+              // DM with only current user (shouldn't happen, but handle gracefully)
+              return { success: true, channelName: "Self DM" };
+            }
+            
+            const userPromises = otherMembers.map(userId => client.users.info({ user: userId }));
+            const userResults = await Promise.all(userPromises);
+            
+            const userNames = userResults
+              .filter(userResult => userResult.ok && userResult.user)
+              .map(userResult => {
+                const user = userResult.user!;
+                const displayName = user.profile?.display_name || user.real_name || user.name || 'User';
+                return displayName;
+              })
+              .filter(name => name);
+            
+            if (userNames.length > 0) {
+              if (userNames.length === 1) {
+                // 1-on-1 DM
+                return { success: true, channelName: userNames[0] };
+              } else {
+                // Group DM (MPDM)
+                const groupName = `${userNames.join(', ')} (Group)`;
+                return { success: true, channelName: groupName };
+              }
+            }
+          }
+        } catch (memberError) {
+          console.error("Get DM members error:", memberError);
+        }
+        
+        // Fallback for DMs
+        const memberCount = result.channel.members?.length || 0;
+        if (memberCount > 2) {
+          return { success: true, channelName: "Group DM" };
+        } else {
+          return { success: true, channelName: "Direct Message" };
+        }
+      }
+      
+      // For other channel types without name
+      return { success: true, channelName: `Channel ${channelId}` };
     }
 
     return { success: false, error: "Channel not found" };
