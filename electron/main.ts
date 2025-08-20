@@ -159,16 +159,22 @@ ipcMain.handle("get-channel-name", async (_, { token, channelId }) => {
           });
           
           if (membersResult.ok && membersResult.members) {
-            // Get user info for members (excluding bots and current user)
-            const otherMembers = membersResult.members
-              .filter(member => !member.startsWith('B') && member !== currentUserId);
+            // Filter out bots
+            const allMembers = membersResult.members.filter(member => !member.startsWith('B'));
+            const otherMembers = allMembers.filter(member => member !== currentUserId);
+            
+            // Determine if it's a group DM (MPDM) or 1-on-1 DM
+            const isGroupDM = allMembers.length > 2;
             
             if (otherMembers.length === 0) {
               // DM with only current user (shouldn't happen, but handle gracefully)
               return { success: true, channelName: "Self DM" };
             }
             
-            const userPromises = otherMembers.map(userId => client.users.info({ user: userId }));
+            // For group DMs (MPDMs), get all members including current user
+            // For 1-on-1 DMs, get only the other user
+            const membersToFetch = isGroupDM ? allMembers : otherMembers;
+            const userPromises = membersToFetch.map(userId => client.users.info({ user: userId }));
             const userResults = await Promise.all(userPromises);
             
             const userNames = userResults
@@ -181,13 +187,13 @@ ipcMain.handle("get-channel-name", async (_, { token, channelId }) => {
               .filter(name => name);
             
             if (userNames.length > 0) {
-              if (userNames.length === 1) {
-                // 1-on-1 DM
-                return { success: true, channelName: userNames[0] };
-              } else {
-                // Group DM (MPDM)
+              if (isGroupDM) {
+                // Group DM (MPDM) - include all members
                 const groupName = `${userNames.join(', ')} (Group)`;
                 return { success: true, channelName: groupName };
+              } else {
+                // 1-on-1 DM - show only the other user
+                return { success: true, channelName: userNames[0] };
               }
             }
           }
@@ -196,12 +202,7 @@ ipcMain.handle("get-channel-name", async (_, { token, channelId }) => {
         }
         
         // Fallback for DMs
-        const memberCount = result.channel.members?.length || 0;
-        if (memberCount > 2) {
-          return { success: true, channelName: "Group DM" };
-        } else {
-          return { success: true, channelName: "Direct Message" };
-        }
+        return { success: true, channelName: "Direct Message" };
       }
       
       // For other channel types without name

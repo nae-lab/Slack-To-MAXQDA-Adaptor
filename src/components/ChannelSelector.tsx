@@ -103,7 +103,9 @@ export function ChannelSelector({
 
   const handleValidate = () => {
     if (inputValue && isChannelId(inputValue)) {
-      validateChannelId(inputValue.trim())
+      const channelId = inputValue.trim()
+      onValueChange(channelId)
+      validateChannelId(channelId)
     }
   }
 
