@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { SlackTokenInfo } from "@/types/electron";
+import { SlackManifestDialog } from "./SlackManifestDialog";
 
 interface SlackTokenSelectorProps {
   onValueChange: (token: string) => void;
@@ -316,6 +317,10 @@ export function SlackTokenSelector({
               {t("tokenSelector.addTokenDescription")}
             </DialogDescription>
           </DialogHeader>
+
+          <div className="flex justify-center">
+            <SlackManifestDialog />
+          </div>
 
           <div className="space-y-4">
             <div className="space-y-2">

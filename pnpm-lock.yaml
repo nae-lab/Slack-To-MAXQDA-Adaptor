@@ -114,8 +114,8 @@ importers:
         specifier: ^0.33.5
         version: 0.33.5
       slack-maxqda-adapter:
-        specifier: ^2.3.0
-        version: 2.3.0
+        specifier: ^2.4.0
+        version: 2.4.0
       tailwind-merge:
         specifier: ^2.2.1
         version: 2.6.0
@@ -2947,8 +2947,8 @@ packages:
     resolution: {integrity: sha512-kUMbT1oBJCpgrnKoSr0o6wPtvRWT9W9UKvGLwfJYO2WuahZRHOpEyL1ckyMGgMWh0UdpmaoFqKKD29WTomNEGA==}
     engines: {node: '>=8'}
 
-  slack-maxqda-adapter@2.3.0:
-    resolution: {integrity: sha512-9egbqLvaGXolxtKZ7o/dg+ffuQ8kYF16xQZ98OMlzw1aGwB3I1DTULaaalsGtvNmklpTIGIYVCrW6YjVFpQqdg==}
+  slack-maxqda-adapter@2.4.0:
+    resolution: {integrity: sha512-+dC0MjaeOscctUeVq/QMHGxNujhaV0DjXeHcIAQpbAzvookM/Q68HOTe53xHWj4uLhyfPhTD1nF4FBafXivEpw==}
 
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
@@ -6197,7 +6197,7 @@ snapshots:
     dependencies:
       unicode-emoji-modifier-base: 1.0.0
 
-  slack-maxqda-adapter@2.3.0:
+  slack-maxqda-adapter@2.4.0:
     dependencies:
       '@slack/web-api': 7.9.3
       '@supercharge/promise-pool': 3.2.0
